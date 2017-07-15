@@ -513,128 +513,6 @@
 
 
   
-    <article id="post-垃圾回收算法详解（二）分代垃圾回收算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[TOC]</p>
-<p>#概念</p>
-<blockquote>
-<p>首先，“<strong>分代垃圾回收</strong>”不能单独用来执行 GC。它是用来和之前介绍的基本算法结合在一起使用，来提高那些基本算法的效率的。</p>
-<p>也就是说，分代垃圾回收不是跟 ”<strong>GC 标记 - 清除算法</strong>”和 “<strong>GC 复制算法</strong>”并列在一起供我们选择的算法，而是需要跟这些基本算法一并使用。</p>
-</blockquote>
-<p>好了，来看看什么是分代垃圾回收算法吧。</p>
-<p><strong>首先，为什么会有分代回收的概念呢？</strong></p>
-<blockquote>
-<p>因为人们从众多程序案例中总结出了一个经验：“大部分的对象在生成后马上就变成了垃圾，很少有对象能活得很久。” </p>
-<p>那我们对新生成的对象执行GC的频率高，对旧对象执行GC频率低，不就可以提高效率了吗。</p>
-<p>于是我们就在对象中导入了“年龄”的概念，经历过一次 GC 后活下来的对象年龄为 1 岁，两次还存活就是2岁，以此类推。</p>
-<p>我们把新生成的对象称作新生代，到达一定年龄的对象叫做老年代。</p>
-</blockquote>
-<p>#堆空间结构</p>
-<p>来看看经典的分代堆示意图:</p>
-<p><img src="http://img.blog.csdn.net/20170408230100767?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
-<blockquote>
-<p>上图中，将堆分为四大部分，1个生成空间、2个幸存空间、1个老年代空间。</p>
-<p>其中，2个幸存空间中的1个是”GC复制算法”概念中的From空间、另一个是To空间。</p>
-<p>对新生代执行GC时，会将生成空间和幸存空间里的From空间存活对象复制到幸存空间里的To空间。如下图。</p>
-</blockquote>
-<p>#新生代空间作用</p>
-<p>新生代GC操作的过程：<br><img src="http://img.blog.csdn.net/20170408230246525?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
-<p>#记录集</p>
-<blockquote>
-<p><strong>记录集是干嘛的呢？</strong><br>在新生代晋升到老年代的时候，老年代中的对象B可能有指向新生代对象A的指针，如果A复制到了老年代空间中成为了A’，那么B中的指向A的指针也要跟着变化。</p>
-<p>常规思路是遍历老年代对象，寻找对象内是否保留了指向新生代对象的引用，如果新生代已经晋升，要及时更改引用的指向。</p>
-<p>因此，引入了记录集的概念，记录集是记录发出引用的对象，而不是引用的目标对象。见下面图解：</p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20170408230905809?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
-<blockquote>
-<p>上图中，B中引用指向A，记录集记录了A的引用是被B发起的，因此记录集记录了B，即引用发起方。这样，当在A复制到老年代后，只需要通过记录集找到B，并把B的引用改变即可，不需要再去遍历老年代了。</p>
-</blockquote>
-<p><strong>那么，分代回收算法是怎么把老年代中的目标对象记录到记录集中的呢？</strong></p>
-<blockquote>
-<p>答案是：调用write_barrier函数</p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20170409135137347?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
-<blockquote>
-<p>参数 obj 是发出引用的对象， obj 内有要更新的指针，而 field 指的就是 obj 内的域，new_obj 是在指针更新后成为引用目标的对象。<br>在第 2 行中检查以下 3 点。<br>• 发出引用的对象是不是老年代对象<br>• 指针更新后的引用的目标对象是不是新生代对象<br>• 发出引用的对象是否还没有被记录到记录集中<br>当这些检查结果都为真时， obj 就被记录到记录集中了。<br>第 3 行的 $rs_index 是用于新记录对象的索引。<br>第 7 行则用于更新指针。</p>
-</blockquote>
-<p>#对象结构</p>
-<p><img src="http://img.blog.csdn.net/20170409140324119?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
-<blockquote>
-<p>如上图，对象的头部中除了包含对象的种类和大小之外，分代回收算法中还在对象头中包含了age、remembered、forwarded几个部分。其中：</p>
-<p>•  age：对象的年龄<br>•  forwarded：已经复制完毕的标志<br>•  remembered：已经向记录集记录完毕的标志</p>
-<p><strong>需要注意的是：age和forwarded是用于新生代，而remembered只用于老年代。</strong></p>
-</blockquote>
-<p>#分配</p>
-<p><img src="http://img.blog.csdn.net/20170409141648182?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
-<blockquote>
-<p>分配函数如上图，没什么好解释的，下面来看看其中的mino_gc()函数是怎么执行的吧。</p>
-</blockquote>
-<p>#新生代GC</p>
-<p><img src="http://img.blog.csdn.net/20170409142148579?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
-<blockquote>
-<p>如上图：新生代GC时先将生成空间和幸存From空间内的活动对象复制到幸存To空间，然后利用记录集将老年代中的目标对象的引用修改。最后释放掉生成空间和幸存空间的From空间。伪代码如下：</p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20170409143346391?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20170409143400188?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
-<blockquote>
-<p>如上图：代码比较简单，可能复制一点的就是copy()函数。来看看copy()具体干了啥。</p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20170409143323946?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
-<blockquote>
-<p>如上图：当对象的年龄未超过指定年龄AGE_MAX时，就会在新生代空间内执行复制操作，如果超过，则执行晋升操作promote(obj)</p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20170409143457228?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20170409143504524?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
-<blockquote>
-<p>如上图，见第2、3、4行，如果老年代空间中没有足够空间，则执行老年代GC操作，即major_gc()操作。否则将新生代对象复制到老年代空间中，并遍历其子节点，然后在记录集中记录。</p>
-</blockquote>
-<p>#老年代GC</p>
-<blockquote>
-<p>老年代GC就是标记清除算法，不在赘述，有关标记清除法请查阅我的另一篇博文<a href="http://blog.csdn.net/yangding_/article/details/69205809" target="_blank" rel="external">垃圾回收算法详解（一）基础算法</a></p>
-</blockquote>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/16/垃圾回收算法详解（二）分代垃圾回收算法/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-TwitterSnowflake算法详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -693,6 +571,355 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/07/14/TwitterSnowflake算法详解/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-垃圾回收算法图谱与介绍(一)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/">垃圾回收算法图谱与介绍（一）</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/14/垃圾回收算法图谱与介绍(一)/" class="archive-article-date">
+  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<h1 id="一、算法图谱"><a href="#一、算法图谱" class="headerlink" title="一、算法图谱"></a>一、算法图谱</h1><p><img src="http://img.blog.csdn.net/20170404202650075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="二、算法介绍"><a href="#二、算法介绍" class="headerlink" title="二、算法介绍"></a>二、算法介绍</h1><h2 id="2-1标记清除法"><a href="#2-1标记清除法" class="headerlink" title="2.1标记清除法"></a><strong>2.1标记清除法</strong></h2><blockquote>
+<p>标记清除法分为标记阶段与清除阶段，先来看个图解。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405151844350?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405151908179?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图描述：从根节点出发，标记所有能从根节点到达的节点。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405151916772?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图描述：从堆开头开始遍历，遇到未被标记的节点就将其插入到空闲链表中，遇到已标记的节点则清除其标记。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>伪代码描述如下</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405152548072?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405152602057?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405152749534?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405152612266?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>以上是垃圾标记清除阶段伪代码，总过程就是先标记，后清除。即每次触发GC时都会执行这两步操作。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>如下是分配内存的伪代码，算法逻辑为：</p>
+<p>如果刚好找到的块的size与所需size相等，则直接返回该块；<br>如果找到的块的size大于所需size，则将该块分割成大小为size和剩余size的两部分，将size那部分返回。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405153609858?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<hr>
+<hr>
+<h2 id="2-2引用计数法"><a href="#2-2引用计数法" class="headerlink" title="2.2引用计数法"></a><strong>2.2引用计数法</strong></h2><blockquote>
+<p>与标记清除法不同，引用计数法并没有明确的启动GC的语句。</p>
+<p><strong>标记清除法</strong>会在分块不够时让mutator触发garbage_collect()函数来执行GC操作。</p>
+<p>而<strong>引用计数法</strong>则是在mutator正常处理流程中通过增减计数器的值来进行内存管理，从而达到GC的效果。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>引用计数法主要涉及两个函数，new_obj()与update_ptr()函数，即开辟内存块阶段和更新引用阶段。伪代码如下：</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405160933033?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图：在分配阶段，如果找到合适的块，则将该块计数器加1.</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405160951484?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图：<br>update_ptr(ptr, obj)函数是将ptr指针指向obj</p>
+<p>首先要对obj的计数器加1</p>
+<p>然后将ptr指针之前指向的域的计数器减1</p>
+<p>最后将ptr指向obj</p>
+<p><strong>注意：为什么要先执行inc_ref_cnt(obj)后执行dec_ref_cnt(*ptr)呢？</strong><br><em>这是因为，当obj与</em>ptr表示同一个对象时，如果先执行dec_ref_cnt(<em>ptr)，那么该对象的计数器值就是0，则该对象会被回收了，那么再执行inc_ref_cnt(obj)会引发BUG。</em></p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405160959593?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405161008359?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图：dec_ref_cnt(obj)先对自己的计数器减1，然后遍历自己的子节点，将子节点的计数器减1。</p>
+<p>reclaim(obj)函数表示将obj插入到空闲链表中。</p>
+</blockquote>
+<p>##<strong>2.3复制法</strong></p>
+<blockquote>
+<p>GC复制算法将内存空间分为两个相同大小的From区域与To区域，</p>
+<p>执行GC操作的过程就是把From区域里的所有活动对象复制到To区域，</p>
+<p>然后将原空间的所有对象回收掉，最后将From和To角色互换，新的To又变成了存放活动对象的From</p>
+<p>好了，废话不多说，先来看一波图解</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405191442005?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405191510365?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405191530803?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405191544441?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>图解的细节可能不够，再来看一波伪代码</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405191749754?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：复制操作先将空闲链表头指向To空间的起始位置，</p>
+<p>然后从root节点开始遍历From空间，将From空间的所有活动节点复制到To空间</p>
+<p>最后清除From空间里所有对象，并把From空间和To空间互换</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405191803426?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：</p>
+<p>copy(obj)函数是将处于From空间的obj复制到To空间的操作，</p>
+<p>其中obj对象有两个标志位：<br>tag表示是否已经被复制，目的是防止子对象被多次复制；<br>forwarding表示From空间中的obj对象在To空间中的复本的位置。copy函数最后会返回该值。</p>
+<p>copy_data(\$free, obj, obj.size)表示将obj复制到\$free链表空间中去，大小为obj.size。</p>
+<p>每次复制完毕，将\$free指针向后移动obj.size个单位，使下一个复制的节点紧挨着放在前一个节点后面。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405191819207?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：GC复制算法的分配操作</p>
+<p>第一步：判断空闲区域加上size大小后，是否超过整个栈空间的一半。其中HEAP_SIZE表示From空间与To空间大小之和。</p>
+<p>第二步：如果超过了，则执行复制操作。如果复制之后，所需的空间还是不够，则抛出异常。</p>
+<p>第三步：在free中开辟一个所需的size大小的空间给obj，然后将$free指针向后移动size位。<br>最后返回obj。</p>
+</blockquote>
+<p>##2.4标记压缩法</p>
+<blockquote>
+<p>标记压缩法：顾名思义，分为标记阶段与压缩阶段。其中标记阶段与标记清除法一样，压缩阶段是讲所有活动对象紧挨着放在一起。先来一波图解吧。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405214523420?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405214539920?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405214548590?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>标记阶段很好理解，压缩阶段可能会有些复杂，别急，再来看一波伪代码。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405215414445?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：标记压缩算法的压缩阶段分为三步<br>1.设定forwarding指针<br>2.更新指针<br>3.移动对象</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405215431018?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405215445899?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405215503868?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">垃圾回收</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">gc</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-垃圾回收算法详解（二）分代垃圾回收算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/">垃圾回收算法详解（二）分代垃圾回收算法</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/" class="archive-article-date">
+  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><blockquote>
+<p>首先，“<strong>分代垃圾回收</strong>”不能单独用来执行 GC。它是用来和之前介绍的基本算法结合在一起使用，来提高那些基本算法的效率的。</p>
+<p>也就是说，分代垃圾回收不是跟 ”<strong>GC 标记 - 清除算法</strong>”和 “<strong>GC 复制算法</strong>”并列在一起供我们选择的算法，而是需要跟这些基本算法一并使用。</p>
+</blockquote>
+<p>好了，来看看什么是分代垃圾回收算法吧。</p>
+<p><strong>首先，为什么会有分代回收的概念呢？</strong></p>
+<blockquote>
+<p>因为人们从众多程序案例中总结出了一个经验：“大部分的对象在生成后马上就变成了垃圾，很少有对象能活得很久。” </p>
+<p>那我们对新生成的对象执行GC的频率高，对旧对象执行GC频率低，不就可以提高效率了吗。</p>
+<p>于是我们就在对象中导入了“年龄”的概念，经历过一次 GC 后活下来的对象年龄为 1 岁，两次还存活就是2岁，以此类推。</p>
+<p>我们把新生成的对象称作新生代，到达一定年龄的对象叫做老年代。</p>
+</blockquote>
+<h1 id="堆空间结构"><a href="#堆空间结构" class="headerlink" title="堆空间结构"></a>堆空间结构</h1><p>来看看经典的分代堆示意图:</p>
+<p><img src="http://img.blog.csdn.net/20170408230100767?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图中，将堆分为四大部分，1个生成空间、2个幸存空间、1个老年代空间。</p>
+<p>其中，2个幸存空间中的1个是”GC复制算法”概念中的From空间、另一个是To空间。</p>
+<p>对新生代执行GC时，会将生成空间和幸存空间里的From空间存活对象复制到幸存空间里的To空间。如下图。</p>
+</blockquote>
+<h1 id="新生代空间作用"><a href="#新生代空间作用" class="headerlink" title="新生代空间作用"></a>新生代空间作用</h1><p>新生代GC操作的过程：<br><img src="http://img.blog.csdn.net/20170408230246525?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="记录集"><a href="#记录集" class="headerlink" title="记录集"></a>记录集</h1><blockquote>
+<p><strong>记录集是干嘛的呢？</strong><br>在新生代晋升到老年代的时候，老年代中的对象B可能有指向新生代对象A的指针，如果A复制到了老年代空间中成为了A’，那么B中的指向A的指针也要跟着变化。</p>
+<p>常规思路是遍历老年代对象，寻找对象内是否保留了指向新生代对象的引用，如果新生代已经晋升，要及时更改引用的指向。</p>
+<p>因此，引入了记录集的概念，记录集是记录发出引用的对象，而不是引用的目标对象。见下面图解：</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170408230905809?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图中，B中引用指向A，记录集记录了A的引用是被B发起的，因此记录集记录了B，即引用发起方。这样，当在A复制到老年代后，只需要通过记录集找到B，并把B的引用改变即可，不需要再去遍历老年代了。</p>
+</blockquote>
+<p><strong>那么，分代回收算法是怎么把老年代中的目标对象记录到记录集中的呢？</strong></p>
+<blockquote>
+<p>答案是：调用write_barrier函数</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170409135137347?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>参数 obj 是发出引用的对象， obj 内有要更新的指针，而 field 指的就是 obj 内的域，new_obj 是在指针更新后成为引用目标的对象。<br>在第 2 行中检查以下 3 点。<br>• 发出引用的对象是不是老年代对象<br>• 指针更新后的引用的目标对象是不是新生代对象<br>• 发出引用的对象是否还没有被记录到记录集中<br>当这些检查结果都为真时， obj 就被记录到记录集中了。<br>第 3 行的 $rs_index 是用于新记录对象的索引。<br>第 7 行则用于更新指针。</p>
+</blockquote>
+<h1 id="对象结构"><a href="#对象结构" class="headerlink" title="对象结构"></a>对象结构</h1><p><img src="http://img.blog.csdn.net/20170409140324119?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图，对象的头部中除了包含对象的种类和大小之外，分代回收算法中还在对象头中包含了age、remembered、forwarded几个部分。其中：</p>
+<p>•  age：对象的年龄<br>•  forwarded：已经复制完毕的标志<br>•  remembered：已经向记录集记录完毕的标志</p>
+<p><strong>需要注意的是：age和forwarded是用于新生代，而remembered只用于老年代。</strong></p>
+</blockquote>
+<h1 id="分配"><a href="#分配" class="headerlink" title="分配"></a>分配</h1><p><img src="http://img.blog.csdn.net/20170409141648182?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>分配函数如上图，没什么好解释的，下面来看看其中的mino_gc()函数是怎么执行的吧。</p>
+</blockquote>
+<h1 id="新生代GC"><a href="#新生代GC" class="headerlink" title="新生代GC"></a>新生代GC</h1><p><img src="http://img.blog.csdn.net/20170409142148579?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：新生代GC时先将生成空间和幸存From空间内的活动对象复制到幸存To空间，然后利用记录集将老年代中的目标对象的引用修改。最后释放掉生成空间和幸存空间的From空间。伪代码如下：</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170409143346391?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20170409143400188?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：代码比较简单，可能复制一点的就是copy()函数。来看看copy()具体干了啥。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170409143323946?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：当对象的年龄未超过指定年龄AGE_MAX时，就会在新生代空间内执行复制操作，如果超过，则执行晋升操作promote(obj)</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170409143457228?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20170409143504524?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图，见第2、3、4行，如果老年代空间中没有足够空间，则执行老年代GC操作，即major_gc()操作。否则将新生代对象复制到老年代空间中，并遍历其子节点，然后在记录集中记录。</p>
+</blockquote>
+<h1 id="老年代GC"><a href="#老年代GC" class="headerlink" title="老年代GC"></a>老年代GC</h1><blockquote>
+<p>老年代GC就是标记清除算法，不在赘述，有关标记清除法请查阅我的另一篇博文<a href="http://blog.csdn.net/yangding_/article/details/69205809" target="_blank" rel="external">垃圾回收算法详解（一）基础算法</a></p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">垃圾回收</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">gc</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/">展开全文 >></a>
         </p>
       
 
@@ -801,84 +1028,10 @@
 
 
   
-    <article id="post-动态代理详解（一）应用示例" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/06/动态代理详解（一）应用示例/">动态代理详解（一）应用示例</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/06/动态代理详解（一）应用示例/" class="archive-article-date">
-  	<time datetime="2017-04-06T06:50:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Proxy;</div><div class="line">&lt;!-- more --&gt;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyInvocationHandler</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span></span>&#123;</div><div class="line">    <span class="comment">// 目标对象</span></div><div class="line">    <span class="keyword">private</span> Object target;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 构造方法</div><div class="line">     * <span class="doctag">@param</span> target 目标对象</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyInvocationHandler</span><span class="params">(Object target)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>();</div><div class="line">        <span class="keyword">this</span>.target = target;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 执行目标对象的方法</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line"></div><div class="line">        <span class="comment">// 在目标对象的方法执行之前简单的打印一下</span></div><div class="line">        System.out.println(<span class="string">"--------before-------"</span>);</div><div class="line"></div><div class="line">        <span class="comment">// 执行目标对象的方法</span></div><div class="line">        Object result = method.invoke(target, args);</div><div class="line"></div><div class="line">        <span class="comment">// 在目标对象的方法执行之后简单的打印一下</span></div><div class="line">        System.out.println(<span class="string">"--------after--------"</span>);</div><div class="line"></div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 获取目标对象的代理对象</div><div class="line">     * <span class="doctag">@return</span> 代理对象</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getProxy</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),</div><div class="line">                target.getClass().getInterfaces(), <span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserService</span> </span>&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 目标方法</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"-------add------"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProxyTest</span> </span>&#123;</div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testProxy</span><span class="params">()</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        <span class="comment">// 实例化目标对象</span></div><div class="line">        UserService userService = <span class="keyword">new</span> UserServiceImpl();</div><div class="line"></div><div class="line">        <span class="comment">// 实例化InvocationHandler</span></div><div class="line">        MyInvocationHandler invocationHandler = <span class="keyword">new</span> MyInvocationHandler(userService);</div><div class="line"></div><div class="line">        <span class="comment">// 根据目标对象生成代理对象</span></div><div class="line">        UserService proxy = (UserService) invocationHandler.getProxy();</div><div class="line"></div><div class="line">        <span class="comment">// 调用代理对象的方法</span></div><div class="line">        proxy.add();</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">------------------before------------------</div><div class="line">--------------------add---------------</div><div class="line">-------------------after------------------</div></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">动态代理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/06/动态代理详解（一）应用示例/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
   
 
 
@@ -1006,6 +1159,18 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">垃圾回收</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">gc</a>
               </li>
             
             <div class="clearfix"></div>

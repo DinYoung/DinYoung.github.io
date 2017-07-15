@@ -6,18 +6,47 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://DinYoung.github.io">
-  <title>dinyoung blog</title>
+  <title>垃圾回收算法图谱与介绍（一） | dinyoung blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="[TOC] #一、ReentrantLock类服务类： 1234567891011public class MyService &amp;#123;    private Lock lock = new ReentrantLock();    public void methodA() &amp;#123;        lock.lock();        for (int i = 0; i &amp;lt; 10;">
+  <meta name="description" content="[toc] 一、算法图谱 二、算法介绍2.1标记清除法 标记清除法分为标记阶段与清除阶段，先来看个图解。     上图描述：从根节点出发，标记所有能从根节点到达的节点。    上图描述：从堆开头开始遍历，遇到未被标记的节点就将其插入到空闲链表中，遇到已标记的节点则清除其标记。    伪代码描述如下       以上是垃圾标记清除阶段伪代码，总过程就是先标记，后清除。即每次触发GC时都会执行这两步操">
+<meta name="keywords" content="算法,垃圾回收,java,gc">
 <meta property="og:type" content="article">
-<meta property="og:title" content="dinyoung blog">
-<meta property="og:url" content="https://DinYoung.github.io/2017/07/16/java多线程常用关键字与方法介绍（二）/index.html">
+<meta property="og:title" content="垃圾回收算法图谱与介绍（一）">
+<meta property="og:url" content="https://DinYoung.github.io/2017/07/14/垃圾回收算法图谱与介绍(一)/index.html">
 <meta property="og:site_name" content="dinyoung blog">
-<meta property="og:description" content="[TOC] #一、ReentrantLock类服务类： 1234567891011public class MyService &amp;#123;    private Lock lock = new ReentrantLock();    public void methodA() &amp;#123;        lock.lock();        for (int i = 0; i &amp;lt; 10;">
-<meta property="og:updated_time" content="2017-07-15T18:28:24.000Z">
+<meta property="og:description" content="[toc] 一、算法图谱 二、算法介绍2.1标记清除法 标记清除法分为标记阶段与清除阶段，先来看个图解。     上图描述：从根节点出发，标记所有能从根节点到达的节点。    上图描述：从堆开头开始遍历，遇到未被标记的节点就将其插入到空闲链表中，遇到已标记的节点则清除其标记。    伪代码描述如下       以上是垃圾标记清除阶段伪代码，总过程就是先标记，后清除。即每次触发GC时都会执行这两步操">
+<meta property="og:image" content="http://img.blog.csdn.net/20170404202650075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405151844350?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405151908179?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405151916772?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405152548072?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405152602057?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405152749534?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405152612266?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405153609858?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405160933033?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405160951484?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405160959593?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405161008359?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405191442005?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405191510365?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405191530803?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405191544441?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405191749754?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405191803426?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405191819207?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405214523420?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405214539920?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405214548590?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405215414445?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405215431018?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405215445899?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170405215503868?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-07-15T18:47:36.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="dinyoung blog">
-<meta name="twitter:description" content="[TOC] #一、ReentrantLock类服务类： 1234567891011public class MyService &amp;#123;    private Lock lock = new ReentrantLock();    public void methodA() &amp;#123;        lock.lock();        for (int i = 0; i &amp;lt; 10;">
+<meta name="twitter:title" content="垃圾回收算法图谱与介绍（一）">
+<meta name="twitter:description" content="[toc] 一、算法图谱 二、算法介绍2.1标记清除法 标记清除法分为标记阶段与清除阶段，先来看个图解。     上图描述：从根节点出发，标记所有能从根节点到达的节点。    上图描述：从堆开头开始遍历，遇到未被标记的节点就将其插入到空闲链表中，遇到已标记的节点则清除其标记。    伪代码描述如下       以上是垃圾标记清除阶段伪代码，总过程就是先标记，后清除。即每次触发GC时都会执行这两步操">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20170404202650075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
   
     <link rel="alternative" href="/atom.xml" title="dinyoung blog" type="application/atom+xml">
   
@@ -139,28 +168,138 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-java多线程常用关键字与方法介绍（二）" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-垃圾回收算法图谱与介绍(一)" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      垃圾回收算法图谱与介绍（一）
+    </h1>
+  
+
+        
+        <a href="/2017/07/14/垃圾回收算法图谱与介绍(一)/" class="archive-article-date">
+  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
+</a>
+        
+      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<p>#一、ReentrantLock类<br><strong>服务类：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class MyService &#123;</div><div class="line">    private Lock lock = new ReentrantLock();</div><div class="line"></div><div class="line">    public void methodA() &#123;</div><div class="line">        lock.lock();</div><div class="line">        for (int i = 0; i &lt; 10; i++) &#123;</div><div class="line">            System.out.println(Thread.currentThread().getName() + &quot;-&quot; + i);</div><div class="line">        &#125;</div><div class="line">        lock.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>线程类</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class MyThread extends Thread&#123;</div><div class="line">    private MyService service;</div><div class="line"></div><div class="line">    public MyThread(MyService service) &#123;</div><div class="line">        super();</div><div class="line">        this.service = service;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        service.methodA();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>调用类</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class Main &#123;</div><div class="line">    public static void main(String[] args)&#123;</div><div class="line">        MyService myService = new MyService();</div><div class="line">        MyThread myThread1 = new MyThread(myService);</div><div class="line">        MyThread myThread2 = new MyThread(myService);</div><div class="line">        MyThread myThread3 = new MyThread(myService);</div><div class="line">        myThread1.start();</div><div class="line">        myThread2.start();</div><div class="line">        myThread3.start();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>说明：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">ReentrantLock的lock.lock()方法与synchronized 关键词以及Object.lock()效果类似。myThread1 与myThread2 与 myThread3 同步运行。 </div><div class="line"></div><div class="line">既然ReentrantLock与Object.lock()都是显示的调用锁，那么他俩有什么区别呢？</div><div class="line"></div><div class="line">ReentrantLock是JDK1.5之后才出现的类，他自然比Object.lock()更加进步。</div><div class="line"></div><div class="line">首先要解释一下“公平锁”与“非公平锁”的概念，当一个线程获取锁后获得执行机会，其他的线程尝试获取该锁时，发现锁被占用，因此进入等待队列。“非公平锁”机制就是当获得锁的线程执行完毕释放锁之后，JVM会在等待队列中随机挑选一个等待线程给他获取锁的机会，而“公平锁”机制就是JVM会在等待队列中挑选队头的线程给他获取锁的机会，也就是FIFO先进先出的顺序。</div><div class="line"></div><div class="line">公平锁：</div><div class="line">private ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);</div><div class="line"></div><div class="line">非公平锁(默认就是)：</div><div class="line">private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();</div><div class="line">private ReentrantReadWriteLock lock = new ReentrantReadWriteLock(false);</div></pre></td></tr></table></figure>
-<p>#二、ReentrantReadWriteLock类</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">public class MyService &#123;</div><div class="line">    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();</div><div class="line"></div><div class="line">    public void read() &#123;</div><div class="line">        try &#123;</div><div class="line">            lock.readLock().lock();</div><div class="line">            System.out.println(&quot;获得读锁&quot; + Thread.currentThread().getName() + &quot;-&quot; + System.currentTimeMillis());</div><div class="line">            Thread.sleep(5000);</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;finally &#123;</div><div class="line">            lock.readLock().unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void write()&#123;</div><div class="line">        try &#123;</div><div class="line">            lock.writeLock().lock();</div><div class="line">            System.out.println(&quot;获得写锁&quot; + Thread.currentThread().getName() + &quot;-&quot; + System.currentTimeMillis());</div><div class="line">            Thread.sleep(5000);</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;finally &#123;</div><div class="line">            lock.writeLock().unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>说明</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">读读共享、写写互斥、读写互斥。</div></pre></td></tr></table></figure>
-<p>#三、Condition</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">public class MyService &#123;</div><div class="line">    private ReentrantLock lock = new ReentrantLock();</div><div class="line"></div><div class="line">    public Condition conditionA = lock.newCondition();</div><div class="line">    public Condition conditionB = lock.newCondition();</div><div class="line"></div><div class="line">    public void methodA() &#123;</div><div class="line">        try &#123;</div><div class="line">            lock.lock();</div><div class="line">            conditionA.await();</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;finally &#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void methodB()&#123;</div><div class="line">        try &#123;</div><div class="line">            lock.lock();</div><div class="line">            conditionB.await();</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;finally &#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void signalAllA()&#123;</div><div class="line">        try &#123;</div><div class="line">            lock.lock();</div><div class="line">            conditionA.signalAll();</div><div class="line">        &#125; finally &#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void signalAllB()&#123;</div><div class="line">        try &#123;</div><div class="line">            lock.lock();</div><div class="line">            conditionB.signalAll();</div><div class="line">        &#125; finally &#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>说明</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">在上一片博文[java多线程常用关键字与方法介绍（一）]中，提到wait()和notify()方法实现的等待/通知模式，而Condition 的await()和signal()方式也可以实现等待/通知模式。那么他俩有什么不一样呢？</div><div class="line"></div><div class="line">wait()和notify()是Object的方法，当多个线程中多个不同的方法调用wait()时，当新的线程调用notifyAll()时会唤醒所wait线程，但是当我们只想唤醒执行某一类方法的线程时，例如只想唤醒执行上述代码的methodA()方法的线程时，该怎么办呢？</div><div class="line"></div><div class="line">这时，我们的Condition类就派上用场了，一个Lock对象里可以创建多个Condition实例（即对象监视器），那么线程就可以注册在指定的Condition中，从而当多个线程进入wait时，可以更加精确的有选择性的唤醒某些线程。</div></pre></td></tr></table></figure>
+        <p>[toc]</p>
+<h1 id="一、算法图谱"><a href="#一、算法图谱" class="headerlink" title="一、算法图谱"></a>一、算法图谱</h1><p><img src="http://img.blog.csdn.net/20170404202650075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="二、算法介绍"><a href="#二、算法介绍" class="headerlink" title="二、算法介绍"></a>二、算法介绍</h1><h2 id="2-1标记清除法"><a href="#2-1标记清除法" class="headerlink" title="2.1标记清除法"></a><strong>2.1标记清除法</strong></h2><blockquote>
+<p>标记清除法分为标记阶段与清除阶段，先来看个图解。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405151844350?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405151908179?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图描述：从根节点出发，标记所有能从根节点到达的节点。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405151916772?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图描述：从堆开头开始遍历，遇到未被标记的节点就将其插入到空闲链表中，遇到已标记的节点则清除其标记。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>伪代码描述如下</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405152548072?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405152602057?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405152749534?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405152612266?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>以上是垃圾标记清除阶段伪代码，总过程就是先标记，后清除。即每次触发GC时都会执行这两步操作。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>如下是分配内存的伪代码，算法逻辑为：</p>
+<p>如果刚好找到的块的size与所需size相等，则直接返回该块；<br>如果找到的块的size大于所需size，则将该块分割成大小为size和剩余size的两部分，将size那部分返回。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405153609858?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<hr>
+<hr>
+<h2 id="2-2引用计数法"><a href="#2-2引用计数法" class="headerlink" title="2.2引用计数法"></a><strong>2.2引用计数法</strong></h2><blockquote>
+<p>与标记清除法不同，引用计数法并没有明确的启动GC的语句。</p>
+<p><strong>标记清除法</strong>会在分块不够时让mutator触发garbage_collect()函数来执行GC操作。</p>
+<p>而<strong>引用计数法</strong>则是在mutator正常处理流程中通过增减计数器的值来进行内存管理，从而达到GC的效果。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>引用计数法主要涉及两个函数，new_obj()与update_ptr()函数，即开辟内存块阶段和更新引用阶段。伪代码如下：</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405160933033?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图：在分配阶段，如果找到合适的块，则将该块计数器加1.</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405160951484?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图：<br>update_ptr(ptr, obj)函数是将ptr指针指向obj</p>
+<p>首先要对obj的计数器加1</p>
+<p>然后将ptr指针之前指向的域的计数器减1</p>
+<p>最后将ptr指向obj</p>
+<p><strong>注意：为什么要先执行inc_ref_cnt(obj)后执行dec_ref_cnt(*ptr)呢？</strong><br><em>这是因为，当obj与</em>ptr表示同一个对象时，如果先执行dec_ref_cnt(<em>ptr)，那么该对象的计数器值就是0，则该对象会被回收了，那么再执行inc_ref_cnt(obj)会引发BUG。</em></p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405160959593?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405161008359?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图：dec_ref_cnt(obj)先对自己的计数器减1，然后遍历自己的子节点，将子节点的计数器减1。</p>
+<p>reclaim(obj)函数表示将obj插入到空闲链表中。</p>
+</blockquote>
+<p>##<strong>2.3复制法</strong></p>
+<blockquote>
+<p>GC复制算法将内存空间分为两个相同大小的From区域与To区域，</p>
+<p>执行GC操作的过程就是把From区域里的所有活动对象复制到To区域，</p>
+<p>然后将原空间的所有对象回收掉，最后将From和To角色互换，新的To又变成了存放活动对象的From</p>
+<p>好了，废话不多说，先来看一波图解</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405191442005?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405191510365?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405191530803?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405191544441?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>图解的细节可能不够，再来看一波伪代码</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405191749754?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：复制操作先将空闲链表头指向To空间的起始位置，</p>
+<p>然后从root节点开始遍历From空间，将From空间的所有活动节点复制到To空间</p>
+<p>最后清除From空间里所有对象，并把From空间和To空间互换</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405191803426?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：</p>
+<p>copy(obj)函数是将处于From空间的obj复制到To空间的操作，</p>
+<p>其中obj对象有两个标志位：<br>tag表示是否已经被复制，目的是防止子对象被多次复制；<br>forwarding表示From空间中的obj对象在To空间中的复本的位置。copy函数最后会返回该值。</p>
+<p>copy_data(\$free, obj, obj.size)表示将obj复制到\$free链表空间中去，大小为obj.size。</p>
+<p>每次复制完毕，将\$free指针向后移动obj.size个单位，使下一个复制的节点紧挨着放在前一个节点后面。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405191819207?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：GC复制算法的分配操作</p>
+<p>第一步：判断空闲区域加上size大小后，是否超过整个栈空间的一半。其中HEAP_SIZE表示From空间与To空间大小之和。</p>
+<p>第二步：如果超过了，则执行复制操作。如果复制之后，所需的空间还是不够，则抛出异常。</p>
+<p>第三步：在free中开辟一个所需的size大小的空间给obj，然后将$free指针向后移动size位。<br>最后返回obj。</p>
+</blockquote>
+<p>##2.4标记压缩法</p>
+<blockquote>
+<p>标记压缩法：顾名思义，分为标记阶段与压缩阶段。其中标记阶段与标记清除法一样，压缩阶段是讲所有活动对象紧挨着放在一起。先来一波图解吧。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405214523420?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405214539920?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405214548590?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>标记阶段很好理解，压缩阶段可能会有些复杂，别急，再来看一波伪代码。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405215414445?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：标记压缩算法的压缩阶段分为三步<br>1.设定forwarding指针<br>2.更新指针<br>3.移动对象</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170405215431018?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405215445899?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20170405215503868?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
 
       
 
@@ -169,6 +308,29 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">垃圾回收</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">gc</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -219,7 +381,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://DinYoung.github.io/2017/07/16/java多线程常用关键字与方法介绍（二）/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://DinYoung.github.io/2017/07/14/垃圾回收算法图谱与介绍(一)/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -233,18 +395,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/07/16/synchronized方式实现生产者-消费者模式/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/07/14/TwitterSnowflake算法详解/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          (no title)
+          Twitter Snowflake算法详解
         
       </div>
     </a>
   
   
-    <a href="/2017/07/16/RocketMQ4.0.0环境搭建及HelloWorld/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title"></div>
+    <a href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">垃圾回收算法详解（二）分代垃圾回收算法</div>
       <i class="icon-circle-right"></i>
     </a>
   
