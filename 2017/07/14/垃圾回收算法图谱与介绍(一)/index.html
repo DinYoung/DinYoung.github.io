@@ -8,13 +8,13 @@
   <link rel="dns-prefetch" href="https://DinYoung.github.io">
   <title>垃圾回收算法图谱与介绍（一） | dinyoung blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="[toc] 一、算法图谱 二、算法介绍2.1标记清除法 标记清除法分为标记阶段与清除阶段，先来看个图解。     上图描述：从根节点出发，标记所有能从根节点到达的节点。    上图描述：从堆开头开始遍历，遇到未被标记的节点就将其插入到空闲链表中，遇到已标记的节点则清除其标记。    伪代码描述如下       以上是垃圾标记清除阶段伪代码，总过程就是先标记，后清除。即每次触发GC时都会执行这两步操">
-<meta name="keywords" content="算法,垃圾回收,java,gc">
+  <meta name="description" content="[toc] 一、算法图谱">
+<meta name="keywords" content="算法,java,垃圾回收,gc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="垃圾回收算法图谱与介绍（一）">
 <meta property="og:url" content="https://DinYoung.github.io/2017/07/14/垃圾回收算法图谱与介绍(一)/index.html">
 <meta property="og:site_name" content="dinyoung blog">
-<meta property="og:description" content="[toc] 一、算法图谱 二、算法介绍2.1标记清除法 标记清除法分为标记阶段与清除阶段，先来看个图解。     上图描述：从根节点出发，标记所有能从根节点到达的节点。    上图描述：从堆开头开始遍历，遇到未被标记的节点就将其插入到空闲链表中，遇到已标记的节点则清除其标记。    伪代码描述如下       以上是垃圾标记清除阶段伪代码，总过程就是先标记，后清除。即每次触发GC时都会执行这两步操">
+<meta property="og:description" content="[toc] 一、算法图谱">
 <meta property="og:image" content="http://img.blog.csdn.net/20170404202650075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20170405151844350?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20170405151908179?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
@@ -42,10 +42,10 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20170405215431018?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20170405215445899?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20170405215503868?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-07-15T18:47:36.000Z">
+<meta property="og:updated_time" content="2017-07-15T18:48:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="垃圾回收算法图谱与介绍（一）">
-<meta name="twitter:description" content="[toc] 一、算法图谱 二、算法介绍2.1标记清除法 标记清除法分为标记阶段与清除阶段，先来看个图解。     上图描述：从根节点出发，标记所有能从根节点到达的节点。    上图描述：从堆开头开始遍历，遇到未被标记的节点就将其插入到空闲链表中，遇到已标记的节点则清除其标记。    伪代码描述如下       以上是垃圾标记清除阶段伪代码，总过程就是先标记，后清除。即每次触发GC时都会执行这两步操">
+<meta name="twitter:description" content="[toc] 一、算法图谱">
 <meta name="twitter:image" content="http://img.blog.csdn.net/20170404202650075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
   
     <link rel="alternative" href="/atom.xml" title="dinyoung blog" type="application/atom+xml">
@@ -190,6 +190,7 @@
       
         <p>[toc]</p>
 <h1 id="一、算法图谱"><a href="#一、算法图谱" class="headerlink" title="一、算法图谱"></a>一、算法图谱</h1><p><img src="http://img.blog.csdn.net/20170404202650075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<a id="more"></a>
 <h1 id="二、算法介绍"><a href="#二、算法介绍" class="headerlink" title="二、算法介绍"></a>二、算法介绍</h1><h2 id="2-1标记清除法"><a href="#2-1标记清除法" class="headerlink" title="2.1标记清除法"></a><strong>2.1标记清除法</strong></h2><blockquote>
 <p>标记清除法分为标记阶段与清除阶段，先来看个图解。</p>
 </blockquote>
@@ -317,11 +318,11 @@
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">垃圾回收</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">垃圾回收</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -395,18 +396,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/07/14/TwitterSnowflake算法详解/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/07/16/RocketMQ报错No route info of this topic解决方案/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          Twitter Snowflake算法详解
+          (no title)
         
       </div>
     </a>
   
   
-    <a href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">垃圾回收算法详解（二）分代垃圾回收算法</div>
+    <a href="/2017/07/14/java多线程常用关键字介绍（一）/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">java多线程常用关键字介绍（一）</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -551,6 +552,10 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">网关</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Twitter Snowflake</a>
               </li>
              
@@ -563,15 +568,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">垃圾回收</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">

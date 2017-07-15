@@ -8,16 +8,16 @@
   <link rel="dns-prefetch" href="https://DinYoung.github.io">
   <title>dinyoung blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="##生产者与消费者类： 123456789101112131415161718192021222324252627282930313233public class MyService &amp;#123;    private ReentrantLock lock = new ReentrantLock();    private Condition condition = lock.newConditi">
+  <meta name="description" content="生产者与消费者类：123456789101112131415161718192021222324252627282930313233public class MyService &amp;#123;    private ReentrantLock lock = new ReentrantLock();    private Condition condition = lock.newCondition(">
 <meta property="og:type" content="article">
 <meta property="og:title" content="dinyoung blog">
 <meta property="og:url" content="https://DinYoung.github.io/2017/07/16/ReentrantLock方式实现生产者-消费者模式/index.html">
 <meta property="og:site_name" content="dinyoung blog">
-<meta property="og:description" content="##生产者与消费者类： 123456789101112131415161718192021222324252627282930313233public class MyService &amp;#123;    private ReentrantLock lock = new ReentrantLock();    private Condition condition = lock.newConditi">
-<meta property="og:updated_time" content="2017-07-15T18:28:37.000Z">
+<meta property="og:description" content="生产者与消费者类：123456789101112131415161718192021222324252627282930313233public class MyService &amp;#123;    private ReentrantLock lock = new ReentrantLock();    private Condition condition = lock.newCondition(">
+<meta property="og:updated_time" content="2017-07-15T18:54:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="dinyoung blog">
-<meta name="twitter:description" content="##生产者与消费者类： 123456789101112131415161718192021222324252627282930313233public class MyService &amp;#123;    private ReentrantLock lock = new ReentrantLock();    private Condition condition = lock.newConditi">
+<meta name="twitter:description" content="生产者与消费者类：123456789101112131415161718192021222324252627282930313233public class MyService &amp;#123;    private ReentrantLock lock = new ReentrantLock();    private Condition condition = lock.newCondition(">
   
     <link rel="alternative" href="/atom.xml" title="dinyoung blog" type="application/atom+xml">
   
@@ -144,8 +144,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>##生产者与消费者类：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">public class MyService &#123;</div><div class="line">    private ReentrantLock lock = new ReentrantLock();</div><div class="line">    private Condition condition = lock.newCondition();</div><div class="line">    private boolean hasValue = false;</div><div class="line"></div><div class="line">    public void set()&#123;</div><div class="line">        try &#123;</div><div class="line">            lock.lock();</div><div class="line">            while (hasValue == true)&#123;</div><div class="line">                condition.await();</div><div class="line">            &#125;</div><div class="line">            System.out.println(&quot;________&quot;);</div><div class="line">            hasValue = true;</div><div class="line">            condition.signal();</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void get()&#123;</div><div class="line">        try&#123;</div><div class="line">            lock.lock();</div><div class="line">            while (hasValue == false)&#123;</div><div class="line">                condition.await();</div><div class="line">            &#125;</div><div class="line">            System.out.println(&quot;+++++++&quot;);</div><div class="line">            hasValue = false;</div><div class="line">            condition.signal();</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        <h2 id="生产者与消费者类："><a href="#生产者与消费者类：" class="headerlink" title="生产者与消费者类："></a>生产者与消费者类：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">public class MyService &#123;</div><div class="line">    private ReentrantLock lock = new ReentrantLock();</div><div class="line">    private Condition condition = lock.newCondition();</div><div class="line">    private boolean hasValue = false;</div><div class="line"></div><div class="line">    public void set()&#123;</div><div class="line">        try &#123;</div><div class="line">            lock.lock();</div><div class="line">            while (hasValue == true)&#123;</div><div class="line">                condition.await();</div><div class="line">            &#125;</div><div class="line">            System.out.println(&quot;________&quot;);</div><div class="line">            hasValue = true;</div><div class="line">            condition.signal();</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void get()&#123;</div><div class="line">        try&#123;</div><div class="line">            lock.lock();</div><div class="line">            while (hasValue == false)&#123;</div><div class="line">                condition.await();</div><div class="line">            &#125;</div><div class="line">            System.out.println(&quot;+++++++&quot;);</div><div class="line">            hasValue = false;</div><div class="line">            condition.signal();</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>##生产者线程：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public class MyThreadA extends Thread&#123;</div><div class="line">    private MyService myService;</div><div class="line"></div><div class="line">    public MyThreadA(MyService myService)&#123;</div><div class="line">        super();</div><div class="line">        this.myService = myService;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void run()&#123;</div><div class="line">        for (int i = 0 ; i &lt; Integer.MAX_VALUE ; i++)&#123;</div><div class="line">            myService.set();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>##消费者线程：</p>
@@ -372,6 +371,10 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">网关</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Twitter Snowflake</a>
               </li>
              
@@ -384,15 +387,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">垃圾回收</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">
