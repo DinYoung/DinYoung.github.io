@@ -6,17 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://DinYoung.github.io">
-  <title>Archives | dinyoung blog</title>
+  <title>Twitter Snowflake算法详解 | dinyoung blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="哈哈! 你来了">
-<meta property="og:type" content="website">
-<meta property="og:title" content="dinyoung blog">
-<meta property="og:url" content="https://DinYoung.github.io/archives/index.html">
+  <meta name="description" content="一、简介Twitter Snowflake算法是用来在分布式场景下生成唯一ID的。 举个栗子：我们有10台分布式MySql服务器，我们的系统每秒能生成10W条数据插入到这10台机器里，现在我们需要为每一条数据生成一个全局唯一的ID， 并且这些 ID 有大致的顺序。 二、算法图解如图：最后生成的ID是一个long类型，long占64bit，符号位占1位，剩下63位，我们将这63位拆分成4段，就可以表">
+<meta name="keywords" content="Twitter Snowflake,算法,分布式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Twitter Snowflake算法详解">
+<meta property="og:url" content="https://DinYoung.github.io/2017/07/14/TwitterSnowflake算法详解/index.html">
 <meta property="og:site_name" content="dinyoung blog">
-<meta property="og:description" content="哈哈! 你来了">
+<meta property="og:description" content="一、简介Twitter Snowflake算法是用来在分布式场景下生成唯一ID的。 举个栗子：我们有10台分布式MySql服务器，我们的系统每秒能生成10W条数据插入到这10台机器里，现在我们需要为每一条数据生成一个全局唯一的ID， 并且这些 ID 有大致的顺序。 二、算法图解如图：最后生成的ID是一个long类型，long占64bit，符号位占1位，剩下63位，我们将这63位拆分成4段，就可以表">
+<meta property="og:image" content="http://img.blog.csdn.net/20161009172408252">
+<meta property="og:image" content="http://img.blog.csdn.net/20161009194753804">
+<meta property="og:updated_time" content="2017-07-15T09:57:12.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="dinyoung blog">
-<meta name="twitter:description" content="哈哈! 你来了">
+<meta name="twitter:title" content="Twitter Snowflake算法详解">
+<meta name="twitter:description" content="一、简介Twitter Snowflake算法是用来在分布式场景下生成唯一ID的。 举个栗子：我们有10台分布式MySql服务器，我们的系统每秒能生成10W条数据插入到这10台机器里，现在我们需要为每一条数据生成一个全局唯一的ID， 并且这些 ID 有大致的顺序。 二、算法图解如图：最后生成的ID是一个long类型，long占64bit，符号位占1位，剩下63位，我们将这63位拆分成4段，就可以表">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20161009172408252">
   
     <link rel="alternative" href="/atom.xml" title="dinyoung blog" type="application/atom+xml">
   
@@ -152,36 +157,65 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-TwitterSnowflake算法详解" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/14/TwitterSnowflake算法详解/" class="archive-article-date">
-  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/07/14/TwitterSnowflake算法详解/">Twitter Snowflake算法详解</a>
+    <h1 class="article-title" itemprop="name">
+      Twitter Snowflake算法详解
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2017/07/14/TwitterSnowflake算法详解/" class="archive-article-date">
+  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><p>Twitter Snowflake算法是用来在分布式场景下生成唯一ID的。</p>
+<p>举个栗子：我们有10台分布式MySql服务器，我们的系统每秒能生成10W条数据插入到这10台机器里，现在我们需要为每一条数据生成一个全局唯一的ID， 并且这些 ID 有大致的顺序。</p>
+<h1 id="二、算法图解"><a href="#二、算法图解" class="headerlink" title="二、算法图解"></a>二、算法图解</h1><p><img src="http://img.blog.csdn.net/20161009172408252" alt="这里写图片描述"><br>如图：最后生成的ID是一个long类型，long占64bit，符号位占1位，剩下63位，我们将这63位拆分成4段，就可以表示：某一毫秒内的某一集群内的某一机器的第几个ID。</p>
+<p>有人会问：为什么时间戳要占41位？sequence要占12位？而其他两个要各占5位？<br>答：这是根据具体需求来分的，你也可以自己再去将这63为重新拆分。例如：sequence占12位就可以在同一毫秒内的同一集群的同一机器上同时有2^12 - 1 个线程。</p>
+<h1 id="三、快快上码"><a href="#三、快快上码" class="headerlink" title="三、快快上码"></a>三、快快上码</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line">public class IdWorker &#123;</div><div class="line">     </div><div class="line">    protected static final Logger LOG = LoggerFactory.getLogger(IdWorker.class);</div><div class="line">     </div><div class="line">    private long workerId;</div><div class="line">    private long datacenterId;</div><div class="line">    private long sequence = 0L;</div><div class="line"> </div><div class="line">    private long twepoch = 1288834974657L;</div><div class="line"> </div><div class="line">    private long workerIdBits = 5L;</div><div class="line">    private long datacenterIdBits = 5L;</div><div class="line">    private long maxWorkerId = -1L ^ (-1L &lt;&lt; workerIdBits);</div><div class="line">    private long maxDatacenterId = -1L ^ (-1L &lt;&lt; datacenterIdBits);</div><div class="line">    private long sequenceBits = 12L;</div><div class="line"> </div><div class="line">    private long workerIdShift = sequenceBits;</div><div class="line">    private long datacenterIdShift = sequenceBits + workerIdBits;</div><div class="line">    private long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;</div><div class="line">    private long sequenceMask = -1L ^ (-1L &lt;&lt; sequenceBits);</div><div class="line"> </div><div class="line">    private long lastTimestamp = -1L;</div><div class="line"> </div><div class="line">    public IdWorker(long workerId, long datacenterId) &#123;</div><div class="line">        // sanity check for workerId</div><div class="line">        if (workerId &gt; maxWorkerId || workerId &lt; 0) &#123;</div><div class="line">            throw new IllegalArgumentException(String.format(&quot;worker Id can&apos;t be greater than %d or less than 0&quot;, maxWorkerId));</div><div class="line">        &#125;</div><div class="line">        if (datacenterId &gt; maxDatacenterId || datacenterId &lt; 0) &#123;</div><div class="line">            throw new IllegalArgumentException(String.format(&quot;datacenter Id can&apos;t be greater than %d or less than 0&quot;, maxDatacenterId));</div><div class="line">        &#125;</div><div class="line">        this.workerId = workerId;</div><div class="line">        this.datacenterId = datacenterId;</div><div class="line">        LOG.info(String.format(&quot;worker starting. timestamp left shift %d, datacenter id bits %d, worker id bits %d, sequence bits %d, workerid %d&quot;, timestampLeftShift, datacenterIdBits, workerIdBits, sequenceBits, workerId));</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    public synchronized long nextId() &#123;</div><div class="line">        long timestamp = timeGen();</div><div class="line"> </div><div class="line">        if (timestamp &lt; lastTimestamp) &#123;</div><div class="line">            LOG.error(String.format(&quot;clock is moving backwards.  Rejecting requests until %d.&quot;, lastTimestamp));</div><div class="line">            throw new RuntimeException(String.format(&quot;Clock moved backwards.  Refusing to generate id for %d milliseconds&quot;, lastTimestamp - timestamp));</div><div class="line">        &#125;</div><div class="line"> </div><div class="line">        if (lastTimestamp == timestamp) &#123;</div><div class="line">            sequence = (sequence + 1) &amp; sequenceMask;</div><div class="line">            if (sequence == 0) &#123;</div><div class="line">                timestamp = tilNextMillis(lastTimestamp);</div><div class="line">            &#125;</div><div class="line">        &#125; else &#123;</div><div class="line">            sequence = 0L;</div><div class="line">        &#125;</div><div class="line"> </div><div class="line">        lastTimestamp = timestamp;</div><div class="line"> </div><div class="line">        return ((timestamp - twepoch) &lt;&lt; timestampLeftShift) | (datacenterId &lt;&lt; datacenterIdShift) | (workerId &lt;&lt; workerIdShift) | sequence;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    protected long tilNextMillis(long lastTimestamp) &#123;</div><div class="line">        long timestamp = timeGen();</div><div class="line">        while (timestamp &lt;= lastTimestamp) &#123;</div><div class="line">            timestamp = timeGen();</div><div class="line">        &#125;</div><div class="line">        return timestamp;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    protected long timeGen() &#123;</div><div class="line">        return System.currentTimeMillis();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="四、Q-amp-A"><a href="#四、Q-amp-A" class="headerlink" title="四、Q&amp;A"></a>四、Q&amp;A</h1><p><strong>问题1：twepoch 为什么要等于1288834974657L 而不等于其他数？</strong><br>答： 1288834974657 是 (Thu, 04 Nov 2010 01:42:54 GMT) 这一时刻到1970-01-01 00:00:00时刻所经过的毫秒数。41位字节作为时间戳数值的话，大约68年就会用完，假如你2010年1月1日开始开发系统，如果不减去2010年1月1日的时间戳，那么白白浪费40年的时间戳啊！所有减去twepoch 可以让系统在41位字节作为时间戳的情况下的运行时间更长。1288834974657L可能就是该项目开始成立的时间。</p>
+<p><strong>问题2：类似这种long maxWorkerId = -1L ^ (-1L &lt;&lt; workerIdBits);操作是什么意思？</strong><br>答： -1L ^ (-1L &lt;&lt; n)表示占n个bit的数字的最大值是多少。举个栗子：-1L ^ (-1L &lt;&lt; 2)等于10进制的3 ，即二进制的11表示十进制3。</p>
+<p>注意：计算机存放数字都是存放数字的补码，正数的原码、补码、反码都一样，负数的补码是其反码加一。符号位做取反操作时不变，做逻辑与、或、非、异或操作时要参与运算。</p>
+<p>再来个栗子：<br>-1L原码 :  1000 0001<br>-1L反码 :  1111 1110<br>-1L补码 :  1111 1111<br>-1L&lt;&lt;5 :  1110 0000<br>1111 1111 ^ 1110 0000 :  0001 1111<br>0001 1111是正数，所以补码、反码、原码都一样，所以0001 1111是31</p>
+<p><strong>问题3：((timestamp - twepoch) &lt;&lt; timestampLeftShift) | (datacenterId &lt;&lt; datacenterIdShift) | (workerId &lt;&lt; workerIdShift) | sequence是什么意思？</strong><br>答：我只发图不说话<br><img src="http://img.blog.csdn.net/20161009194753804" alt="这里写图片描述"></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -201,19 +235,94 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://DinYoung.github.io/2017/07/14/TwitterSnowflake算法详解/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-  
-    </div></section>
+
   
 
-    
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
+  
+
+  
+
+  
 
 
           </div>
@@ -236,8 +345,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
