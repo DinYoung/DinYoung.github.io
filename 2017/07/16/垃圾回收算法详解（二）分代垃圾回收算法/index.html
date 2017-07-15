@@ -6,17 +6,31 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://DinYoung.github.io">
-  <title>Archives | dinyoung blog</title>
+  <title>dinyoung blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="哈哈! 你来了">
-<meta property="og:type" content="website">
+  <meta name="description" content="[TOC] #概念  首先，“分代垃圾回收”不能单独用来执行 GC。它是用来和之前介绍的基本算法结合在一起使用，来提高那些基本算法的效率的。 也就是说，分代垃圾回收不是跟 ”GC 标记 - 清除算法”和 “GC 复制算法”并列在一起供我们选择的算法，而是需要跟这些基本算法一并使用。  好了，来看看什么是分代垃圾回收算法吧。 首先，为什么会有分代回收的概念呢？  因为人们从众多程序案例中总结出了一个">
+<meta property="og:type" content="article">
 <meta property="og:title" content="dinyoung blog">
-<meta property="og:url" content="https://DinYoung.github.io/archives/index.html">
+<meta property="og:url" content="https://DinYoung.github.io/2017/07/16/垃圾回收算法详解（二）分代垃圾回收算法/index.html">
 <meta property="og:site_name" content="dinyoung blog">
-<meta property="og:description" content="哈哈! 你来了">
+<meta property="og:description" content="[TOC] #概念  首先，“分代垃圾回收”不能单独用来执行 GC。它是用来和之前介绍的基本算法结合在一起使用，来提高那些基本算法的效率的。 也就是说，分代垃圾回收不是跟 ”GC 标记 - 清除算法”和 “GC 复制算法”并列在一起供我们选择的算法，而是需要跟这些基本算法一并使用。  好了，来看看什么是分代垃圾回收算法吧。 首先，为什么会有分代回收的概念呢？  因为人们从众多程序案例中总结出了一个">
+<meta property="og:image" content="http://img.blog.csdn.net/20170408230100767?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170408230246525?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170408230905809?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170409135137347?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170409140324119?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170409141648182?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170409142148579?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170409143346391?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170409143400188?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170409143323946?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170409143457228?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170409143504524?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-07-15T18:27:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="dinyoung blog">
-<meta name="twitter:description" content="哈哈! 你来了">
+<meta name="twitter:description" content="[TOC] #概念  首先，“分代垃圾回收”不能单独用来执行 GC。它是用来和之前介绍的基本算法结合在一起使用，来提高那些基本算法的效率的。 也就是说，分代垃圾回收不是跟 ”GC 标记 - 清除算法”和 “GC 复制算法”并列在一起供我们选择的算法，而是需要跟这些基本算法一并使用。  好了，来看看什么是分代垃圾回收算法吧。 首先，为什么会有分代回收的概念呢？  因为人们从众多程序案例中总结出了一个">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20170408230100767?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
   
     <link rel="alternative" href="/atom.xml" title="dinyoung blog" type="application/atom+xml">
   
@@ -138,291 +152,201 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-垃圾回收算法详解（二）分代垃圾回收算法" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<p>#概念</p>
+<blockquote>
+<p>首先，“<strong>分代垃圾回收</strong>”不能单独用来执行 GC。它是用来和之前介绍的基本算法结合在一起使用，来提高那些基本算法的效率的。</p>
+<p>也就是说，分代垃圾回收不是跟 ”<strong>GC 标记 - 清除算法</strong>”和 “<strong>GC 复制算法</strong>”并列在一起供我们选择的算法，而是需要跟这些基本算法一并使用。</p>
+</blockquote>
+<p>好了，来看看什么是分代垃圾回收算法吧。</p>
+<p><strong>首先，为什么会有分代回收的概念呢？</strong></p>
+<blockquote>
+<p>因为人们从众多程序案例中总结出了一个经验：“大部分的对象在生成后马上就变成了垃圾，很少有对象能活得很久。” </p>
+<p>那我们对新生成的对象执行GC的频率高，对旧对象执行GC频率低，不就可以提高效率了吗。</p>
+<p>于是我们就在对象中导入了“年龄”的概念，经历过一次 GC 后活下来的对象年龄为 1 岁，两次还存活就是2岁，以此类推。</p>
+<p>我们把新生成的对象称作新生代，到达一定年龄的对象叫做老年代。</p>
+</blockquote>
+<p>#堆空间结构</p>
+<p>来看看经典的分代堆示意图:</p>
+<p><img src="http://img.blog.csdn.net/20170408230100767?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图中，将堆分为四大部分，1个生成空间、2个幸存空间、1个老年代空间。</p>
+<p>其中，2个幸存空间中的1个是”GC复制算法”概念中的From空间、另一个是To空间。</p>
+<p>对新生代执行GC时，会将生成空间和幸存空间里的From空间存活对象复制到幸存空间里的To空间。如下图。</p>
+</blockquote>
+<p>#新生代空间作用</p>
+<p>新生代GC操作的过程：<br><img src="http://img.blog.csdn.net/20170408230246525?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>#记录集</p>
+<blockquote>
+<p><strong>记录集是干嘛的呢？</strong><br>在新生代晋升到老年代的时候，老年代中的对象B可能有指向新生代对象A的指针，如果A复制到了老年代空间中成为了A’，那么B中的指向A的指针也要跟着变化。</p>
+<p>常规思路是遍历老年代对象，寻找对象内是否保留了指向新生代对象的引用，如果新生代已经晋升，要及时更改引用的指向。</p>
+<p>因此，引入了记录集的概念，记录集是记录发出引用的对象，而不是引用的目标对象。见下面图解：</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170408230905809?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图中，B中引用指向A，记录集记录了A的引用是被B发起的，因此记录集记录了B，即引用发起方。这样，当在A复制到老年代后，只需要通过记录集找到B，并把B的引用改变即可，不需要再去遍历老年代了。</p>
+</blockquote>
+<p><strong>那么，分代回收算法是怎么把老年代中的目标对象记录到记录集中的呢？</strong></p>
+<blockquote>
+<p>答案是：调用write_barrier函数</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170409135137347?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>参数 obj 是发出引用的对象， obj 内有要更新的指针，而 field 指的就是 obj 内的域，new_obj 是在指针更新后成为引用目标的对象。<br>在第 2 行中检查以下 3 点。<br>• 发出引用的对象是不是老年代对象<br>• 指针更新后的引用的目标对象是不是新生代对象<br>• 发出引用的对象是否还没有被记录到记录集中<br>当这些检查结果都为真时， obj 就被记录到记录集中了。<br>第 3 行的 $rs_index 是用于新记录对象的索引。<br>第 7 行则用于更新指针。</p>
+</blockquote>
+<p>#对象结构</p>
+<p><img src="http://img.blog.csdn.net/20170409140324119?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图，对象的头部中除了包含对象的种类和大小之外，分代回收算法中还在对象头中包含了age、remembered、forwarded几个部分。其中：</p>
+<p>•  age：对象的年龄<br>•  forwarded：已经复制完毕的标志<br>•  remembered：已经向记录集记录完毕的标志</p>
+<p><strong>需要注意的是：age和forwarded是用于新生代，而remembered只用于老年代。</strong></p>
+</blockquote>
+<p>#分配</p>
+<p><img src="http://img.blog.csdn.net/20170409141648182?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>分配函数如上图，没什么好解释的，下面来看看其中的mino_gc()函数是怎么执行的吧。</p>
+</blockquote>
+<p>#新生代GC</p>
+<p><img src="http://img.blog.csdn.net/20170409142148579?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：新生代GC时先将生成空间和幸存From空间内的活动对象复制到幸存To空间，然后利用记录集将老年代中的目标对象的引用修改。最后释放掉生成空间和幸存空间的From空间。伪代码如下：</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170409143346391?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20170409143400188?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：代码比较简单，可能复制一点的就是copy()函数。来看看copy()具体干了啥。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170409143323946?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：当对象的年龄未超过指定年龄AGE_MAX时，就会在新生代空间内执行复制操作，如果超过，则执行晋升操作promote(obj)</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170409143457228?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20170409143504524?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图，见第2、3、4行，如果老年代空间中没有足够空间，则执行老年代GC操作，即major_gc()操作。否则将新生代对象复制到老年代空间中，并遍历其子节点，然后在记录集中记录。</p>
+</blockquote>
+<p>#老年代GC</p>
+<blockquote>
+<p>老年代GC就是标记清除算法，不在赘述，有关标记清除法请查阅我的另一篇博文<a href="http://blog.csdn.net/yangding_/article/details/69205809" target="_blank" rel="external">垃圾回收算法详解（一）基础算法</a></p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/ReentrantLock方式实现生产者-消费者模式/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:28:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://DinYoung.github.io/2017/07/16/垃圾回收算法详解（二）分代垃圾回收算法/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/synchronized方式实现生产者-消费者模式/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:28:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/java多线程常用关键字与方法介绍（二）/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:28:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+<nav id="article-nav">
+  
+    <a href="/2017/07/16/API网关设计与实现（一）/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/07/14/TwitterSnowflake算法详解/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Twitter Snowflake算法详解</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/RocketMQ4.0.0环境搭建及HelloWorld/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:28:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/RocketMQ报错No route info of this topic解决方案/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:27:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+        
+        
+    </div>
+</aside>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/API网关设计与实现（一）/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:27:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/垃圾回收算法详解（二）分代垃圾回收算法/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:27:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/14/TwitterSnowflake算法详解/" class="archive-article-date">
-  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
-</a>
-        </div>
-    	 
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/07/14/TwitterSnowflake算法详解/">Twitter Snowflake算法详解</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Twitter Snowflake</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">分布式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/06/动态代理详解（二）原理解析/" class="archive-article-date">
-  	<time datetime="2017-04-06T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/06/动态代理详解（二）原理解析/">动态代理详解（二）原理解析</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">动态代理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/06/动态代理详解（一）应用示例/" class="archive-article-date">
-  	<time datetime="2017-04-06T06:50:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/06/动态代理详解（一）应用示例/">动态代理详解（一）应用示例</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">动态代理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -445,8 +369,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

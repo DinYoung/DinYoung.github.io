@@ -140,6 +140,501 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-ReentrantLock方式实现生产者-消费者模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##生产者与消费者类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">public class MyService &#123;</div><div class="line">    private ReentrantLock lock = new ReentrantLock();</div><div class="line">    private Condition condition = lock.newCondition();</div><div class="line">    private boolean hasValue = false;</div><div class="line"></div><div class="line">    public void set()&#123;</div><div class="line">        try &#123;</div><div class="line">            lock.lock();</div><div class="line">            while (hasValue == true)&#123;</div><div class="line">                condition.await();</div><div class="line">            &#125;</div><div class="line">            System.out.println(&quot;________&quot;);</div><div class="line">            hasValue = true;</div><div class="line">            condition.signal();</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void get()&#123;</div><div class="line">        try&#123;</div><div class="line">            lock.lock();</div><div class="line">            while (hasValue == false)&#123;</div><div class="line">                condition.await();</div><div class="line">            &#125;</div><div class="line">            System.out.println(&quot;+++++++&quot;);</div><div class="line">            hasValue = false;</div><div class="line">            condition.signal();</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>##生产者线程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public class MyThreadA extends Thread&#123;</div><div class="line">    private MyService myService;</div><div class="line"></div><div class="line">    public MyThreadA(MyService myService)&#123;</div><div class="line">        super();</div><div class="line">        this.myService = myService;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void run()&#123;</div><div class="line">        for (int i = 0 ; i &lt; Integer.MAX_VALUE ; i++)&#123;</div><div class="line">            myService.set();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>##消费者线程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public class MyThreadA extends Thread&#123;</div><div class="line">    private MyService myService;</div><div class="line"></div><div class="line">    public MyThreadA(MyService myService)&#123;</div><div class="line">        super();</div><div class="line">        this.myService = myService;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void run()&#123;</div><div class="line">        for (int i = 0 ; i &lt; Integer.MAX_VALUE ; i++)&#123;</div><div class="line">            myService.set();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>##启动类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public class Run &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        MyService myService = new MyService();</div><div class="line">        MyThreadA a = new MyThreadA(myService);</div><div class="line">        a.start();</div><div class="line">        MyThreadB b = new MyThreadB(myService);</div><div class="line">        b.start();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>##运行结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">+++++++</div><div class="line">________</div><div class="line">+++++++</div><div class="line">________</div><div class="line">+++++++</div><div class="line">________</div><div class="line">+++++++</div><div class="line">________</div><div class="line">+++++++</div><div class="line">________</div><div class="line">+++++++</div><div class="line">________</div></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/16/ReentrantLock方式实现生产者-消费者模式/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-synchronized方式实现生产者-消费者模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##生产者：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">public class Producer &#123;</div><div class="line">    private String lock;</div><div class="line"></div><div class="line">    public Producer(String lock)&#123;</div><div class="line">        super();</div><div class="line">        this.lock = lock;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setValue()&#123;</div><div class="line">        try&#123;</div><div class="line">            synchronized (lock)&#123;</div><div class="line">                if(!ValueObject.value.equals(&quot;&quot;))&#123;</div><div class="line">                    lock.wait();</div><div class="line">                &#125;</div><div class="line">                String value = System.currentTimeMillis() + &quot;_&quot; + System.nanoTime();</div><div class="line">                ValueObject.value = value;</div><div class="line">                System.out.println(&quot;set:&quot; + value);</div><div class="line">                lock.notify();</div><div class="line">            &#125;</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>##消费者：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">public class Consumer &#123;</div><div class="line"></div><div class="line">    private String lock;</div><div class="line"></div><div class="line">    public Consumer(String lock)&#123;</div><div class="line">        super();</div><div class="line">        this.lock = lock;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void getValue()&#123;</div><div class="line">        try&#123;</div><div class="line">            synchronized (lock)&#123;</div><div class="line">                if(ValueObject.value.equals(&quot;&quot;))&#123;</div><div class="line">                    lock.wait();</div><div class="line">                &#125;</div><div class="line">                System.out.println(&quot;get:&quot; + ValueObject.value);</div><div class="line">                ValueObject.value = &quot;&quot;;</div><div class="line">                lock.notify();</div><div class="line">            &#125;</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>##生产者线程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class ThreadProducer extends Thread &#123;</div><div class="line">    private Producer producer;</div><div class="line"></div><div class="line">    public ThreadProducer(Producer producer)&#123;</div><div class="line">        this.producer = producer;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        while (true)&#123;</div><div class="line">            producer.setValue();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>##消费者线程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public class ThreadConsumer extends Thread &#123;</div><div class="line"></div><div class="line">    private Consumer consumer;</div><div class="line"></div><div class="line">    public ThreadConsumer(Consumer consumer)&#123;</div><div class="line">        this.consumer = consumer;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        while (true)&#123;</div><div class="line">            consumer.getValue();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>##公共值对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public class ValueObject &#123;</div><div class="line">    public static String value = &quot;&quot;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>##启动类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Run &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        String lock = new String(&quot;&quot;);</div><div class="line">        Producer p = new Producer(lock);</div><div class="line">        Consumer c = new Consumer(lock);</div><div class="line">        ThreadProducer pThread = new ThreadProducer(p);</div><div class="line">        ThreadConsumer cThread = new ThreadConsumer(c);</div><div class="line"></div><div class="line">        pThread.start();</div><div class="line">        cThread.start();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>##运行结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">set:1487991128665_697508406469322</div><div class="line">get:1487991128665_697508406469322</div><div class="line">set:1487991128665_697508406488082</div><div class="line">get:1487991128665_697508406488082</div><div class="line">set:1487991128665_697508406506548</div><div class="line">get:1487991128665_697508406506548</div><div class="line">set:1487991128665_697508406525014</div><div class="line">get:1487991128665_697508406525014</div><div class="line">set:1487991128665_697508406544066</div><div class="line">get:1487991128665_697508406544066</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/16/synchronized方式实现生产者-消费者模式/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-java多线程常用关键字与方法介绍（二）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<p>#一、ReentrantLock类<br><strong>服务类：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class MyService &#123;</div><div class="line">    private Lock lock = new ReentrantLock();</div><div class="line"></div><div class="line">    public void methodA() &#123;</div><div class="line">        lock.lock();</div><div class="line">        for (int i = 0; i &lt; 10; i++) &#123;</div><div class="line">            System.out.println(Thread.currentThread().getName() + &quot;-&quot; + i);</div><div class="line">        &#125;</div><div class="line">        lock.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>线程类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class MyThread extends Thread&#123;</div><div class="line">    private MyService service;</div><div class="line"></div><div class="line">    public MyThread(MyService service) &#123;</div><div class="line">        super();</div><div class="line">        this.service = service;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        service.methodA();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>调用类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class Main &#123;</div><div class="line">    public static void main(String[] args)&#123;</div><div class="line">        MyService myService = new MyService();</div><div class="line">        MyThread myThread1 = new MyThread(myService);</div><div class="line">        MyThread myThread2 = new MyThread(myService);</div><div class="line">        MyThread myThread3 = new MyThread(myService);</div><div class="line">        myThread1.start();</div><div class="line">        myThread2.start();</div><div class="line">        myThread3.start();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>说明：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">ReentrantLock的lock.lock()方法与synchronized 关键词以及Object.lock()效果类似。myThread1 与myThread2 与 myThread3 同步运行。 </div><div class="line"></div><div class="line">既然ReentrantLock与Object.lock()都是显示的调用锁，那么他俩有什么区别呢？</div><div class="line"></div><div class="line">ReentrantLock是JDK1.5之后才出现的类，他自然比Object.lock()更加进步。</div><div class="line"></div><div class="line">首先要解释一下“公平锁”与“非公平锁”的概念，当一个线程获取锁后获得执行机会，其他的线程尝试获取该锁时，发现锁被占用，因此进入等待队列。“非公平锁”机制就是当获得锁的线程执行完毕释放锁之后，JVM会在等待队列中随机挑选一个等待线程给他获取锁的机会，而“公平锁”机制就是JVM会在等待队列中挑选队头的线程给他获取锁的机会，也就是FIFO先进先出的顺序。</div><div class="line"></div><div class="line">公平锁：</div><div class="line">private ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);</div><div class="line"></div><div class="line">非公平锁(默认就是)：</div><div class="line">private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();</div><div class="line">private ReentrantReadWriteLock lock = new ReentrantReadWriteLock(false);</div></pre></td></tr></table></figure>
+<p>#二、ReentrantReadWriteLock类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">public class MyService &#123;</div><div class="line">    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();</div><div class="line"></div><div class="line">    public void read() &#123;</div><div class="line">        try &#123;</div><div class="line">            lock.readLock().lock();</div><div class="line">            System.out.println(&quot;获得读锁&quot; + Thread.currentThread().getName() + &quot;-&quot; + System.currentTimeMillis());</div><div class="line">            Thread.sleep(5000);</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;finally &#123;</div><div class="line">            lock.readLock().unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void write()&#123;</div><div class="line">        try &#123;</div><div class="line">            lock.writeLock().lock();</div><div class="line">            System.out.println(&quot;获得写锁&quot; + Thread.currentThread().getName() + &quot;-&quot; + System.currentTimeMillis());</div><div class="line">            Thread.sleep(5000);</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;finally &#123;</div><div class="line">            lock.writeLock().unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>说明</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">读读共享、写写互斥、读写互斥。</div></pre></td></tr></table></figure>
+<p>#三、Condition</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">public class MyService &#123;</div><div class="line">    private ReentrantLock lock = new ReentrantLock();</div><div class="line"></div><div class="line">    public Condition conditionA = lock.newCondition();</div><div class="line">    public Condition conditionB = lock.newCondition();</div><div class="line"></div><div class="line">    public void methodA() &#123;</div><div class="line">        try &#123;</div><div class="line">            lock.lock();</div><div class="line">            conditionA.await();</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;finally &#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void methodB()&#123;</div><div class="line">        try &#123;</div><div class="line">            lock.lock();</div><div class="line">            conditionB.await();</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;finally &#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void signalAllA()&#123;</div><div class="line">        try &#123;</div><div class="line">            lock.lock();</div><div class="line">            conditionA.signalAll();</div><div class="line">        &#125; finally &#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void signalAllB()&#123;</div><div class="line">        try &#123;</div><div class="line">            lock.lock();</div><div class="line">            conditionB.signalAll();</div><div class="line">        &#125; finally &#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>说明</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">在上一片博文[java多线程常用关键字与方法介绍（一）]中，提到wait()和notify()方法实现的等待/通知模式，而Condition 的await()和signal()方式也可以实现等待/通知模式。那么他俩有什么不一样呢？</div><div class="line"></div><div class="line">wait()和notify()是Object的方法，当多个线程中多个不同的方法调用wait()时，当新的线程调用notifyAll()时会唤醒所wait线程，但是当我们只想唤醒执行某一类方法的线程时，例如只想唤醒执行上述代码的methodA()方法的线程时，该怎么办呢？</div><div class="line"></div><div class="line">这时，我们的Condition类就派上用场了，一个Lock对象里可以创建多个Condition实例（即对象监视器），那么线程就可以注册在指定的Condition中，从而当多个线程进入wait时，可以更加精确的有选择性的唤醒某些线程。</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/16/java多线程常用关键字与方法介绍（二）/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-RocketMQ4.0.0环境搭建及HelloWorld" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#一、linux平台下搭建<br>1 准备条件：64bit JDK 1.7+;且配置好JAVA_HOME环境变量</p>
+<p>2 去apache官网<a href="https://rocketmq.incubator.apache.org/dowloading/releases/" target="_blank" rel="external">Downloading the Apache RocketMQ Releases</a>下载rocketmq-all-4.0.0-incubating-bin-release.zip，注意：最好要Binary版，不然后续启动会报ClassNotFound错误。如果官网已经没有4.0.0版本或者无法连接到官网，也可以到我的资源<a href="http://download.csdn.net/detail/u012216366/9768649" target="_blank" rel="external">RocketMQ4.0.0安装包</a>下载。</p>
+<p>3 解压文件：unzip rocketmq-all-4.0.0-incubating-bin-release.zip</p>
+<p>4 进入解压后的目录apache-rocketmq-all</p>
+<p>5 启动 Name Server:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nohup sh bin/mqnamesrv &amp;</div></pre></td></tr></table></figure></p>
+<p>6 启动Broker：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nohup sh bin/mqbroker -n localhost:9876 &amp;</div></pre></td></tr></table></figure></p>
+<p><strong>测试：</strong></p>
+<p>启动 Producer：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">export NAMESRV_ADDR=localhost:9876</div><div class="line"></div><div class="line">sh bin/tools.sh org.apache.rocketmq.example.quickstart.Producer</div></pre></td></tr></table></figure></p>
+<p>启动 Consumer：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sh bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer</div></pre></td></tr></table></figure>
+<p>#二、windows平台下搭建<br>很悲伤，RocketMQ4.0.0版本暂无windows版，但是我们还是可以在windows平台下使用和练习。</p>
+<p>1 在<a href="https://github.com/apache/incubator-rocketmq" target="_blank" rel="external">rocketmq的github地址</a> 将源代码导入到本地。<br>如果该地址版本已更新，可以到<a href="https://github.com/tim-young/incubator-rocketmq" target="_blank" rel="external">我的github地址</a>下载，以确保是4.0.0版本。</p>
+<p>2 添加环境变量ROCKETMQ_HOME ，设置值为：127.0.0.1:9876</p>
+<p>3 启动Name Server：<br>(a) 进入org.apache.rocketmq.namesrv包内的NamesrvStartup类，修改109行的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">configurator.doConfigure(namesrvConfig.getRocketmqHome() + &quot;/conf/logback_namesrv.xml&quot;);</div></pre></td></tr></table></figure>
+<p>将namesrvConfig.getRocketmqHome()改为你工程存放的目录，例如我的设置是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">configurator.doConfigure(&quot;E:/IdeaWorkplace/incubator-rocketmq&quot; + &quot;/conf/logback_namesrv.xml&quot;);</div></pre></td></tr></table></figure>
+<p>(b) run NamesrvStartup类的main方法</p>
+<p>4 启动Broker：<br>(a) 进入org.apache.rocketmq.broker包内的BrokerStartup类，修改183行的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">configurator.doConfigure(brokerConfig.getRocketmqHome() + &quot;/conf/logback_broker.xml&quot;);</div></pre></td></tr></table></figure>
+<p>将brokerConfig.getRocketmqHome()改为你工程存放的目录，例如我的设置是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">configurator.doConfigure(&quot;E:/IdeaWorkplace/incubator-rocketmq&quot; + &quot;/conf/logback_namesrv.xml&quot;);</div></pre></td></tr></table></figure>
+<p>(b) run BrokerStartup的main方法</p>
+<p>5 测试<br>进入example模块下的org.apache.rocketmq.example.quickstart包，先run Producer的main方法，再run Consumer的main方法。看到如下输出，表示配置成功。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">SendResult [sendStatus=SEND_OK, msgId=0A762C5D210447415DBF06CF99C203E0, offsetMsgId=0A762C5D00002A9F0000000000060E64, messageQueue=MessageQueue [topic=TopicTest, brokerName=SF0001139954B, queueId=1], queueOffset=498]</div><div class="line">SendResult [sendStatus=SEND_OK, msgId=0A762C5D210447415DBF06CF99C503E1, offsetMsgId=0A762C5D00002A9F0000000000060F18, messageQueue=MessageQueue [topic=TopicTest, brokerName=SF0001139954B, queueId=2], queueOffset=498]</div><div class="line">SendResult [sendStatus=SEND_OK, msgId=0A762C5D210447415DBF06CF99C703E2, offsetMsgId=0A762C5D00002A9F0000000000060FCC, messageQueue=MessageQueue [topic=TopicTest, brokerName=SF0001139954B, queueId=3], queueOffset=498]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ConsumeMessageThread_9 Receive New Messages: [MessageExt [queueId=3, storeSize=180, queueOffset=484, sysFlag=0, bornTimestamp=1488455068491, bornHost=/10.118.44.93:59296, storeTimestamp=1488455068492, storeHost=/10.118.44.93:10911, msgId=0A762C5D00002A9F000000000005E86C, commitLogOffset=387180, bodyCRC=736192263, reconsumeTimes=0, preparedTransactionOffset=0, toString()=Message [topic=TopicTest, flag=0, properties=&#123;TAGS=TagA, WAIT=true, UNIQ_KEY=0A762C5D210447415DBF06CF994B03AA, MAX_OFFSET=500, CONSUME_START_TIME=1488455116459, MIN_OFFSET=0&#125;, body=18]]]</div><div class="line">ConsumeMessageThread_18 Receive New Messages: [MessageExt [queueId=3, storeSize=180, queueOffset=483, sysFlag=0, bornTimestamp=1488455068483, bornHost=/10.118.44.93:59296, storeTimestamp=1488455068484, storeHost=/10.118.44.93:10911, msgId=0A762C5D00002A9F000000000005E59C, commitLogOffset=386460, bodyCRC=576138028, reconsumeTimes=0, preparedTransactionOffset=0, toString()=Message [topic=TopicTest, flag=0, properties=&#123;TAGS=TagA, WAIT=true, UNIQ_KEY=0A762C5D210447415DBF06CF994303A6, MAX_OFFSET=500, CONSUME_START_TIME=1488455116459, MIN_OFFSET=0&#125;, body=18]]]</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/16/RocketMQ4.0.0环境搭建及HelloWorld/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-RocketMQ报错No route info of this topic解决方案" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>按照官方文档启动broker</strong><br><strong>↓↓↓↓↓↓这是错误的！！！↓↓↓↓↓↓</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nohup sh bin/mqbroker -n localhost:9876 &amp;</div></pre></td></tr></table></figure>
+<p><strong>↑↑↑↑↑↑这是错误的！！！↑↑↑↑↑↑</strong></p>
+<p><strong>测试时会报错：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">com.alibaba.rocketmq.client.exception.MQClientException: No route info of this topic, TopicTest1</div><div class="line">See http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&amp;topic_not_exist for further details.</div><div class="line">	at com.alibaba.rocketmq.client.impl.producer.DefaultMQProducerImpl.sendDefaultImpl(DefaultMQProducerImpl.java:542)</div><div class="line">	at com.alibaba.rocketmq.client.impl.producer.DefaultMQProducerImpl.send(DefaultMQProducerImpl.java:1030)</div><div class="line">	at com.alibaba.rocketmq.client.impl.producer.DefaultMQProducerImpl.send(DefaultMQProducerImpl.java:989)</div><div class="line">	at com.alibaba.rocketmq.client.producer.DefaultMQProducer.send(DefaultMQProducer.java:90)</div><div class="line">	at com.yang.rocketmq.Producer.main(Producer.java:45)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)</div><div class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</div><div class="line">	at java.lang.reflect.Method.invoke(Method.java:606)</div><div class="line">	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:147)</div></pre></td></tr></table></figure>
+<p><strong>将broker启动方式</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nohup sh bin/mqbroker -n localhost:9876 &amp;</div></pre></td></tr></table></figure></p>
+<p><strong>改为：</strong><br><strong>↓↓↓↓↓↓这才是正确的！！！↓↓↓↓↓↓</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nohup sh mqbroker -n localhost:9876 autoCreateTopicEnable=true &amp;</div></pre></td></tr></table></figure></p>
+<p><strong>↑↑↑↑↑↑这才是正确的！！！↑↑↑↑↑↑</strong></p>
+<p>OK!</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/16/RocketMQ报错No route info of this topic解决方案/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-API网关设计与实现（一）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<h1 id="API网关使用场景"><a href="#API网关使用场景" class="headerlink" title="API网关使用场景"></a>API网关使用场景</h1><blockquote>
+<p>在使用微服务架构场景下，客户端在调用后台微服务时，都需要进行登陆认证、权限认证、流量控制、负载均衡、健康检查等操作，这些操作是调用每一个微服务都必须。因此需要将该操作交给一个高性能的中间层进行处理，以降低系统间的耦合，并使微服务更加专注于业务逻辑处理，降低整体系统的响应时间。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170318130052179?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>如图，来自各种终端的请求经过一层负载均衡后到达网关，网关统一做登陆认证、权限认证、流量控制、负载均衡、健康检查等操作后，再将请求转发到后台微服务。</p>
+<p>#API网关技术选型与应用架构</p>
+<blockquote>
+<p>API网关作为后台微服务请求的入口，必然要求其具有高性能的特点，为了使其可以按照自己的使用场景定制开发，对其易扩展性也要求很高，并且最好是有成熟的产品与规范的文档以及活跃的社区支持。OpenResty自然成为了首选！OpenResty是一款基于Ngnix的利用lua语言作为扩展的API网关技术。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170318142604061?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>上图为利用Openresty作为API网关的一种微服务架构图。如图所示：</p>
+<blockquote>
+<p>Openresty启动时会先去redis集群中获取最新的服务地址与配置信息，并且进行消息订阅（即对某一端口进行监听）；</p>
+<p>后台微服务都会在ZK中进行注册，Gateway微服务会对ZK内的信息进行处理后存入redis集群中，并实时监听ZK的地址变动情况，redis集群中有了服务的地址就可以将地址推送给Openresty做负载均衡；</p>
+<p>OS web平台提供一个web界面用于方便的进行流量控制与权限控制的设置；</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/16/API网关设计与实现（一）/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-垃圾回收算法详解（二）分代垃圾回收算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<p>#概念</p>
+<blockquote>
+<p>首先，“<strong>分代垃圾回收</strong>”不能单独用来执行 GC。它是用来和之前介绍的基本算法结合在一起使用，来提高那些基本算法的效率的。</p>
+<p>也就是说，分代垃圾回收不是跟 ”<strong>GC 标记 - 清除算法</strong>”和 “<strong>GC 复制算法</strong>”并列在一起供我们选择的算法，而是需要跟这些基本算法一并使用。</p>
+</blockquote>
+<p>好了，来看看什么是分代垃圾回收算法吧。</p>
+<p><strong>首先，为什么会有分代回收的概念呢？</strong></p>
+<blockquote>
+<p>因为人们从众多程序案例中总结出了一个经验：“大部分的对象在生成后马上就变成了垃圾，很少有对象能活得很久。” </p>
+<p>那我们对新生成的对象执行GC的频率高，对旧对象执行GC频率低，不就可以提高效率了吗。</p>
+<p>于是我们就在对象中导入了“年龄”的概念，经历过一次 GC 后活下来的对象年龄为 1 岁，两次还存活就是2岁，以此类推。</p>
+<p>我们把新生成的对象称作新生代，到达一定年龄的对象叫做老年代。</p>
+</blockquote>
+<p>#堆空间结构</p>
+<p>来看看经典的分代堆示意图:</p>
+<p><img src="http://img.blog.csdn.net/20170408230100767?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图中，将堆分为四大部分，1个生成空间、2个幸存空间、1个老年代空间。</p>
+<p>其中，2个幸存空间中的1个是”GC复制算法”概念中的From空间、另一个是To空间。</p>
+<p>对新生代执行GC时，会将生成空间和幸存空间里的From空间存活对象复制到幸存空间里的To空间。如下图。</p>
+</blockquote>
+<p>#新生代空间作用</p>
+<p>新生代GC操作的过程：<br><img src="http://img.blog.csdn.net/20170408230246525?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>#记录集</p>
+<blockquote>
+<p><strong>记录集是干嘛的呢？</strong><br>在新生代晋升到老年代的时候，老年代中的对象B可能有指向新生代对象A的指针，如果A复制到了老年代空间中成为了A’，那么B中的指向A的指针也要跟着变化。</p>
+<p>常规思路是遍历老年代对象，寻找对象内是否保留了指向新生代对象的引用，如果新生代已经晋升，要及时更改引用的指向。</p>
+<p>因此，引入了记录集的概念，记录集是记录发出引用的对象，而不是引用的目标对象。见下面图解：</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170408230905809?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>上图中，B中引用指向A，记录集记录了A的引用是被B发起的，因此记录集记录了B，即引用发起方。这样，当在A复制到老年代后，只需要通过记录集找到B，并把B的引用改变即可，不需要再去遍历老年代了。</p>
+</blockquote>
+<p><strong>那么，分代回收算法是怎么把老年代中的目标对象记录到记录集中的呢？</strong></p>
+<blockquote>
+<p>答案是：调用write_barrier函数</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170409135137347?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>参数 obj 是发出引用的对象， obj 内有要更新的指针，而 field 指的就是 obj 内的域，new_obj 是在指针更新后成为引用目标的对象。<br>在第 2 行中检查以下 3 点。<br>• 发出引用的对象是不是老年代对象<br>• 指针更新后的引用的目标对象是不是新生代对象<br>• 发出引用的对象是否还没有被记录到记录集中<br>当这些检查结果都为真时， obj 就被记录到记录集中了。<br>第 3 行的 $rs_index 是用于新记录对象的索引。<br>第 7 行则用于更新指针。</p>
+</blockquote>
+<p>#对象结构</p>
+<p><img src="http://img.blog.csdn.net/20170409140324119?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图，对象的头部中除了包含对象的种类和大小之外，分代回收算法中还在对象头中包含了age、remembered、forwarded几个部分。其中：</p>
+<p>•  age：对象的年龄<br>•  forwarded：已经复制完毕的标志<br>•  remembered：已经向记录集记录完毕的标志</p>
+<p><strong>需要注意的是：age和forwarded是用于新生代，而remembered只用于老年代。</strong></p>
+</blockquote>
+<p>#分配</p>
+<p><img src="http://img.blog.csdn.net/20170409141648182?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>分配函数如上图，没什么好解释的，下面来看看其中的mino_gc()函数是怎么执行的吧。</p>
+</blockquote>
+<p>#新生代GC</p>
+<p><img src="http://img.blog.csdn.net/20170409142148579?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：新生代GC时先将生成空间和幸存From空间内的活动对象复制到幸存To空间，然后利用记录集将老年代中的目标对象的引用修改。最后释放掉生成空间和幸存空间的From空间。伪代码如下：</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170409143346391?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20170409143400188?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：代码比较简单，可能复制一点的就是copy()函数。来看看copy()具体干了啥。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170409143323946?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图：当对象的年龄未超过指定年龄AGE_MAX时，就会在新生代空间内执行复制操作，如果超过，则执行晋升操作promote(obj)</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170409143457228?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20170409143504524?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<blockquote>
+<p>如上图，见第2、3、4行，如果老年代空间中没有足够空间，则执行老年代GC操作，即major_gc()操作。否则将新生代对象复制到老年代空间中，并遍历其子节点，然后在记录集中记录。</p>
+</blockquote>
+<p>#老年代GC</p>
+<blockquote>
+<p>老年代GC就是标记清除算法，不在赘述，有关标记清除法请查阅我的另一篇博文<a href="http://blog.csdn.net/yangding_/article/details/69205809" target="_blank" rel="external">垃圾回收算法详解（一）基础算法</a></p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/16/垃圾回收算法详解（二）分代垃圾回收算法/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-TwitterSnowflake算法详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -198,6 +693,163 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/07/14/TwitterSnowflake算法详解/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-动态代理详解（二）原理解析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/06/动态代理详解（二）原理解析/">动态代理详解（二）原理解析</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/06/动态代理详解（二）原理解析/" class="archive-article-date">
+  	<time datetime="2017-04-06T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<h1 id="确定目标问题"><a href="#确定目标问题" class="headerlink" title="确定目标问题"></a>确定目标问题</h1><p>在上一篇博文 <a href="http://blog.csdn.net/yangding_/article/details/70184688" target="_blank" rel="external">动态代理详解（一）应用示例</a> 中，读完代码之后存在的主要困惑有两点：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">1.MyInvocationHandler 的 invoke 方法是什么时候调用的？</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">2.Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), target.getClass().getInterfaces(), this)做了些什么？</div></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/2017/04/06/动态代理详解（二）原理解析/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">动态代理</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/06/动态代理详解（二）原理解析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-动态代理详解（一）应用示例" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/06/动态代理详解（一）应用示例/">动态代理详解（一）应用示例</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/06/动态代理详解（一）应用示例/" class="archive-article-date">
+  	<time datetime="2017-04-06T06:50:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Proxy;</div><div class="line">&lt;!-- more --&gt;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyInvocationHandler</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span></span>&#123;</div><div class="line">    <span class="comment">// 目标对象</span></div><div class="line">    <span class="keyword">private</span> Object target;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 构造方法</div><div class="line">     * <span class="doctag">@param</span> target 目标对象</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyInvocationHandler</span><span class="params">(Object target)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>();</div><div class="line">        <span class="keyword">this</span>.target = target;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 执行目标对象的方法</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line"></div><div class="line">        <span class="comment">// 在目标对象的方法执行之前简单的打印一下</span></div><div class="line">        System.out.println(<span class="string">"--------before-------"</span>);</div><div class="line"></div><div class="line">        <span class="comment">// 执行目标对象的方法</span></div><div class="line">        Object result = method.invoke(target, args);</div><div class="line"></div><div class="line">        <span class="comment">// 在目标对象的方法执行之后简单的打印一下</span></div><div class="line">        System.out.println(<span class="string">"--------after--------"</span>);</div><div class="line"></div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 获取目标对象的代理对象</div><div class="line">     * <span class="doctag">@return</span> 代理对象</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getProxy</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),</div><div class="line">                target.getClass().getInterfaces(), <span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserService</span> </span>&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 目标方法</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"-------add------"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProxyTest</span> </span>&#123;</div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testProxy</span><span class="params">()</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        <span class="comment">// 实例化目标对象</span></div><div class="line">        UserService userService = <span class="keyword">new</span> UserServiceImpl();</div><div class="line"></div><div class="line">        <span class="comment">// 实例化InvocationHandler</span></div><div class="line">        MyInvocationHandler invocationHandler = <span class="keyword">new</span> MyInvocationHandler(userService);</div><div class="line"></div><div class="line">        <span class="comment">// 根据目标对象生成代理对象</span></div><div class="line">        UserService proxy = (UserService) invocationHandler.getProxy();</div><div class="line"></div><div class="line">        <span class="comment">// 调用代理对象的方法</span></div><div class="line">        proxy.add();</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">------------------before------------------</div><div class="line">--------------------add---------------</div><div class="line">-------------------after------------------</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">动态代理</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/06/动态代理详解（一）应用示例/">展开全文 >></a>
         </p>
       
 
@@ -350,6 +1002,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
               </li>
             
             <div class="clearfix"></div>

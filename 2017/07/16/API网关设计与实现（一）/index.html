@@ -6,17 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://DinYoung.github.io">
-  <title>Archives | dinyoung blog</title>
+  <title>dinyoung blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="哈哈! 你来了">
-<meta property="og:type" content="website">
+  <meta name="description" content="[TOC] API网关使用场景 在使用微服务架构场景下，客户端在调用后台微服务时，都需要进行登陆认证、权限认证、流量控制、负载均衡、健康检查等操作，这些操作是调用每一个微服务都必须。因此需要将该操作交给一个高性能的中间层进行处理，以降低系统间的耦合，并使微服务更加专注于业务逻辑处理，降低整体系统的响应时间。   如图，来自各种终端的请求经过一层负载均衡后到达网关，网关统一做登陆认证、权限认证、流量">
+<meta property="og:type" content="article">
 <meta property="og:title" content="dinyoung blog">
-<meta property="og:url" content="https://DinYoung.github.io/archives/index.html">
+<meta property="og:url" content="https://DinYoung.github.io/2017/07/16/API网关设计与实现（一）/index.html">
 <meta property="og:site_name" content="dinyoung blog">
-<meta property="og:description" content="哈哈! 你来了">
+<meta property="og:description" content="[TOC] API网关使用场景 在使用微服务架构场景下，客户端在调用后台微服务时，都需要进行登陆认证、权限认证、流量控制、负载均衡、健康检查等操作，这些操作是调用每一个微服务都必须。因此需要将该操作交给一个高性能的中间层进行处理，以降低系统间的耦合，并使微服务更加专注于业务逻辑处理，降低整体系统的响应时间。   如图，来自各种终端的请求经过一层负载均衡后到达网关，网关统一做登陆认证、权限认证、流量">
+<meta property="og:image" content="http://img.blog.csdn.net/20170318130052179?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170318142604061?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-07-15T18:27:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="dinyoung blog">
-<meta name="twitter:description" content="哈哈! 你来了">
+<meta name="twitter:description" content="[TOC] API网关使用场景 在使用微服务架构场景下，客户端在调用后台微服务时，都需要进行登陆认证、权限认证、流量控制、负载均衡、健康检查等操作，这些操作是调用每一个微服务都必须。因此需要将该操作交给一个高性能的中间层进行处理，以降低系统间的耦合，并使微服务更加专注于业务逻辑处理，降低整体系统的响应时间。   如图，来自各种终端的请求经过一层负载均衡后到达网关，网关统一做登陆认证、权限认证、流量">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20170318130052179?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
   
     <link rel="alternative" href="/atom.xml" title="dinyoung blog" type="application/atom+xml">
   
@@ -138,291 +142,143 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-API网关设计与实现（一）" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<h1 id="API网关使用场景"><a href="#API网关使用场景" class="headerlink" title="API网关使用场景"></a>API网关使用场景</h1><blockquote>
+<p>在使用微服务架构场景下，客户端在调用后台微服务时，都需要进行登陆认证、权限认证、流量控制、负载均衡、健康检查等操作，这些操作是调用每一个微服务都必须。因此需要将该操作交给一个高性能的中间层进行处理，以降低系统间的耦合，并使微服务更加专注于业务逻辑处理，降低整体系统的响应时间。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170318130052179?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>如图，来自各种终端的请求经过一层负载均衡后到达网关，网关统一做登陆认证、权限认证、流量控制、负载均衡、健康检查等操作后，再将请求转发到后台微服务。</p>
+<p>#API网关技术选型与应用架构</p>
+<blockquote>
+<p>API网关作为后台微服务请求的入口，必然要求其具有高性能的特点，为了使其可以按照自己的使用场景定制开发，对其易扩展性也要求很高，并且最好是有成熟的产品与规范的文档以及活跃的社区支持。OpenResty自然成为了首选！OpenResty是一款基于Ngnix的利用lua语言作为扩展的API网关技术。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170318142604061?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>上图为利用Openresty作为API网关的一种微服务架构图。如图所示：</p>
+<blockquote>
+<p>Openresty启动时会先去redis集群中获取最新的服务地址与配置信息，并且进行消息订阅（即对某一端口进行监听）；</p>
+<p>后台微服务都会在ZK中进行注册，Gateway微服务会对ZK内的信息进行处理后存入redis集群中，并实时监听ZK的地址变动情况，redis集群中有了服务的地址就可以将地址推送给Openresty做负载均衡；</p>
+<p>OS web平台提供一个web界面用于方便的进行流量控制与权限控制的设置；</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/ReentrantLock方式实现生产者-消费者模式/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:28:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://DinYoung.github.io/2017/07/16/API网关设计与实现（一）/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/synchronized方式实现生产者-消费者模式/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:28:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/java多线程常用关键字与方法介绍（二）/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:28:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+<nav id="article-nav">
+  
+    <a href="/2017/07/16/RocketMQ报错No route info of this topic解决方案/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/07/16/垃圾回收算法详解（二）分代垃圾回收算法/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title"></div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/RocketMQ4.0.0环境搭建及HelloWorld/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:28:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/RocketMQ报错No route info of this topic解决方案/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:27:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+        
+        
+    </div>
+</aside>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/API网关设计与实现（一）/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:27:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/垃圾回收算法详解（二）分代垃圾回收算法/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:27:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/14/TwitterSnowflake算法详解/" class="archive-article-date">
-  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
-</a>
-        </div>
-    	 
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/07/14/TwitterSnowflake算法详解/">Twitter Snowflake算法详解</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Twitter Snowflake</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">分布式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/06/动态代理详解（二）原理解析/" class="archive-article-date">
-  	<time datetime="2017-04-06T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/06/动态代理详解（二）原理解析/">动态代理详解（二）原理解析</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">动态代理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/06/动态代理详解（一）应用示例/" class="archive-article-date">
-  	<time datetime="2017-04-06T06:50:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/06/动态代理详解（一）应用示例/">动态代理详解（一）应用示例</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">动态代理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -445,8 +301,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

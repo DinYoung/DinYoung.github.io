@@ -6,17 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://DinYoung.github.io">
-  <title>Archives | dinyoung blog</title>
+  <title>dinyoung blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="哈哈! 你来了">
-<meta property="og:type" content="website">
+  <meta name="description" content="#一、linux平台下搭建1 准备条件：64bit JDK 1.7+;且配置好JAVA_HOME环境变量 2 去apache官网Downloading the Apache RocketMQ Releases下载rocketmq-all-4.0.0-incubating-bin-release.zip，注意：最好要Binary版，不然后续启动会报ClassNotFound错误。如果官网已经没有4.">
+<meta property="og:type" content="article">
 <meta property="og:title" content="dinyoung blog">
-<meta property="og:url" content="https://DinYoung.github.io/archives/index.html">
+<meta property="og:url" content="https://DinYoung.github.io/2017/07/16/RocketMQ4.0.0环境搭建及HelloWorld/index.html">
 <meta property="og:site_name" content="dinyoung blog">
-<meta property="og:description" content="哈哈! 你来了">
+<meta property="og:description" content="#一、linux平台下搭建1 准备条件：64bit JDK 1.7+;且配置好JAVA_HOME环境变量 2 去apache官网Downloading the Apache RocketMQ Releases下载rocketmq-all-4.0.0-incubating-bin-release.zip，注意：最好要Binary版，不然后续启动会报ClassNotFound错误。如果官网已经没有4.">
+<meta property="og:updated_time" content="2017-07-15T18:28:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="dinyoung blog">
-<meta name="twitter:description" content="哈哈! 你来了">
+<meta name="twitter:description" content="#一、linux平台下搭建1 准备条件：64bit JDK 1.7+;且配置好JAVA_HOME环境变量 2 去apache官网Downloading the Apache RocketMQ Releases下载rocketmq-all-4.0.0-incubating-bin-release.zip，注意：最好要Binary版，不然后续启动会报ClassNotFound错误。如果官网已经没有4.">
   
     <link rel="alternative" href="/atom.xml" title="dinyoung blog" type="application/atom+xml">
   
@@ -138,291 +139,152 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-RocketMQ4.0.0环境搭建及HelloWorld" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#一、linux平台下搭建<br>1 准备条件：64bit JDK 1.7+;且配置好JAVA_HOME环境变量</p>
+<p>2 去apache官网<a href="https://rocketmq.incubator.apache.org/dowloading/releases/" target="_blank" rel="external">Downloading the Apache RocketMQ Releases</a>下载rocketmq-all-4.0.0-incubating-bin-release.zip，注意：最好要Binary版，不然后续启动会报ClassNotFound错误。如果官网已经没有4.0.0版本或者无法连接到官网，也可以到我的资源<a href="http://download.csdn.net/detail/u012216366/9768649" target="_blank" rel="external">RocketMQ4.0.0安装包</a>下载。</p>
+<p>3 解压文件：unzip rocketmq-all-4.0.0-incubating-bin-release.zip</p>
+<p>4 进入解压后的目录apache-rocketmq-all</p>
+<p>5 启动 Name Server:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nohup sh bin/mqnamesrv &amp;</div></pre></td></tr></table></figure></p>
+<p>6 启动Broker：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nohup sh bin/mqbroker -n localhost:9876 &amp;</div></pre></td></tr></table></figure></p>
+<p><strong>测试：</strong></p>
+<p>启动 Producer：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">export NAMESRV_ADDR=localhost:9876</div><div class="line"></div><div class="line">sh bin/tools.sh org.apache.rocketmq.example.quickstart.Producer</div></pre></td></tr></table></figure></p>
+<p>启动 Consumer：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sh bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer</div></pre></td></tr></table></figure>
+<p>#二、windows平台下搭建<br>很悲伤，RocketMQ4.0.0版本暂无windows版，但是我们还是可以在windows平台下使用和练习。</p>
+<p>1 在<a href="https://github.com/apache/incubator-rocketmq" target="_blank" rel="external">rocketmq的github地址</a> 将源代码导入到本地。<br>如果该地址版本已更新，可以到<a href="https://github.com/tim-young/incubator-rocketmq" target="_blank" rel="external">我的github地址</a>下载，以确保是4.0.0版本。</p>
+<p>2 添加环境变量ROCKETMQ_HOME ，设置值为：127.0.0.1:9876</p>
+<p>3 启动Name Server：<br>(a) 进入org.apache.rocketmq.namesrv包内的NamesrvStartup类，修改109行的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">configurator.doConfigure(namesrvConfig.getRocketmqHome() + &quot;/conf/logback_namesrv.xml&quot;);</div></pre></td></tr></table></figure>
+<p>将namesrvConfig.getRocketmqHome()改为你工程存放的目录，例如我的设置是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">configurator.doConfigure(&quot;E:/IdeaWorkplace/incubator-rocketmq&quot; + &quot;/conf/logback_namesrv.xml&quot;);</div></pre></td></tr></table></figure>
+<p>(b) run NamesrvStartup类的main方法</p>
+<p>4 启动Broker：<br>(a) 进入org.apache.rocketmq.broker包内的BrokerStartup类，修改183行的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">configurator.doConfigure(brokerConfig.getRocketmqHome() + &quot;/conf/logback_broker.xml&quot;);</div></pre></td></tr></table></figure>
+<p>将brokerConfig.getRocketmqHome()改为你工程存放的目录，例如我的设置是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">configurator.doConfigure(&quot;E:/IdeaWorkplace/incubator-rocketmq&quot; + &quot;/conf/logback_namesrv.xml&quot;);</div></pre></td></tr></table></figure>
+<p>(b) run BrokerStartup的main方法</p>
+<p>5 测试<br>进入example模块下的org.apache.rocketmq.example.quickstart包，先run Producer的main方法，再run Consumer的main方法。看到如下输出，表示配置成功。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">SendResult [sendStatus=SEND_OK, msgId=0A762C5D210447415DBF06CF99C203E0, offsetMsgId=0A762C5D00002A9F0000000000060E64, messageQueue=MessageQueue [topic=TopicTest, brokerName=SF0001139954B, queueId=1], queueOffset=498]</div><div class="line">SendResult [sendStatus=SEND_OK, msgId=0A762C5D210447415DBF06CF99C503E1, offsetMsgId=0A762C5D00002A9F0000000000060F18, messageQueue=MessageQueue [topic=TopicTest, brokerName=SF0001139954B, queueId=2], queueOffset=498]</div><div class="line">SendResult [sendStatus=SEND_OK, msgId=0A762C5D210447415DBF06CF99C703E2, offsetMsgId=0A762C5D00002A9F0000000000060FCC, messageQueue=MessageQueue [topic=TopicTest, brokerName=SF0001139954B, queueId=3], queueOffset=498]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ConsumeMessageThread_9 Receive New Messages: [MessageExt [queueId=3, storeSize=180, queueOffset=484, sysFlag=0, bornTimestamp=1488455068491, bornHost=/10.118.44.93:59296, storeTimestamp=1488455068492, storeHost=/10.118.44.93:10911, msgId=0A762C5D00002A9F000000000005E86C, commitLogOffset=387180, bodyCRC=736192263, reconsumeTimes=0, preparedTransactionOffset=0, toString()=Message [topic=TopicTest, flag=0, properties=&#123;TAGS=TagA, WAIT=true, UNIQ_KEY=0A762C5D210447415DBF06CF994B03AA, MAX_OFFSET=500, CONSUME_START_TIME=1488455116459, MIN_OFFSET=0&#125;, body=18]]]</div><div class="line">ConsumeMessageThread_18 Receive New Messages: [MessageExt [queueId=3, storeSize=180, queueOffset=483, sysFlag=0, bornTimestamp=1488455068483, bornHost=/10.118.44.93:59296, storeTimestamp=1488455068484, storeHost=/10.118.44.93:10911, msgId=0A762C5D00002A9F000000000005E59C, commitLogOffset=386460, bodyCRC=576138028, reconsumeTimes=0, preparedTransactionOffset=0, toString()=Message [topic=TopicTest, flag=0, properties=&#123;TAGS=TagA, WAIT=true, UNIQ_KEY=0A762C5D210447415DBF06CF994303A6, MAX_OFFSET=500, CONSUME_START_TIME=1488455116459, MIN_OFFSET=0&#125;, body=18]]]</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/ReentrantLock方式实现生产者-消费者模式/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:28:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://DinYoung.github.io/2017/07/16/RocketMQ4.0.0环境搭建及HelloWorld/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/synchronized方式实现生产者-消费者模式/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:28:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/java多线程常用关键字与方法介绍（二）/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:28:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+<nav id="article-nav">
+  
+    <a href="/2017/07/16/java多线程常用关键字与方法介绍（二）/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/07/16/RocketMQ报错No route info of this topic解决方案/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title"></div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/RocketMQ4.0.0环境搭建及HelloWorld/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:28:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/RocketMQ报错No route info of this topic解决方案/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:27:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+        
+        
+    </div>
+</aside>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/API网关设计与实现（一）/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:27:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/16/垃圾回收算法详解（二）分代垃圾回收算法/" class="archive-article-date">
-  	<time datetime="2017-07-15T18:27:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-16</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/14/TwitterSnowflake算法详解/" class="archive-article-date">
-  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
-</a>
-        </div>
-    	 
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/07/14/TwitterSnowflake算法详解/">Twitter Snowflake算法详解</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Twitter Snowflake</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">分布式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/06/动态代理详解（二）原理解析/" class="archive-article-date">
-  	<time datetime="2017-04-06T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/06/动态代理详解（二）原理解析/">动态代理详解（二）原理解析</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">动态代理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/06/动态代理详解（一）应用示例/" class="archive-article-date">
-  	<time datetime="2017-04-06T06:50:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/06/动态代理详解（一）应用示例/">动态代理详解（一）应用示例</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">动态代理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -445,8 +307,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
