@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="https://DinYoung.github.io">
   <title>java多线程常用关键字与方法介绍（二） | dinyoung blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="[TOC] 一、ReentrantLock类服务类： 1234567891011public class MyService &amp;#123;    private Lock lock = new ReentrantLock();    public void methodA() &amp;#123;        lock.lock();        for (int i = 0; i &amp;lt; 10;">
+  <meta name="description" content="一、ReentrantLock类服务类： 1234567891011public class MyService &amp;#123;    private Lock lock = new ReentrantLock();    public void methodA() &amp;#123;        lock.lock();        for (int i = 0; i &amp;lt; 10; i++) &amp;">
 <meta name="keywords" content="多线程,java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="java多线程常用关键字与方法介绍（二）">
 <meta property="og:url" content="https://DinYoung.github.io/2017/07/14/java多线程常用关键字与方法介绍（二）/index.html">
 <meta property="og:site_name" content="dinyoung blog">
-<meta property="og:description" content="[TOC] 一、ReentrantLock类服务类： 1234567891011public class MyService &amp;#123;    private Lock lock = new ReentrantLock();    public void methodA() &amp;#123;        lock.lock();        for (int i = 0; i &amp;lt; 10;">
-<meta property="og:updated_time" content="2017-07-15T18:53:47.000Z">
+<meta property="og:description" content="一、ReentrantLock类服务类： 1234567891011public class MyService &amp;#123;    private Lock lock = new ReentrantLock();    public void methodA() &amp;#123;        lock.lock();        for (int i = 0; i &amp;lt; 10; i++) &amp;">
+<meta property="og:updated_time" content="2017-07-16T03:09:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java多线程常用关键字与方法介绍（二）">
-<meta name="twitter:description" content="[TOC] 一、ReentrantLock类服务类： 1234567891011public class MyService &amp;#123;    private Lock lock = new ReentrantLock();    public void methodA() &amp;#123;        lock.lock();        for (int i = 0; i &amp;lt; 10;">
+<meta name="twitter:description" content="一、ReentrantLock类服务类： 1234567891011public class MyService &amp;#123;    private Lock lock = new ReentrantLock();    public void methodA() &amp;#123;        lock.lock();        for (int i = 0; i &amp;lt; 10; i++) &amp;">
   
     <link rel="alternative" href="/atom.xml" title="dinyoung blog" type="application/atom+xml">
   
@@ -160,8 +160,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<h1 id="一、ReentrantLock类"><a href="#一、ReentrantLock类" class="headerlink" title="一、ReentrantLock类"></a>一、ReentrantLock类</h1><p><strong>服务类：</strong></p>
+        <h1 id="一、ReentrantLock类"><a href="#一、ReentrantLock类" class="headerlink" title="一、ReentrantLock类"></a>一、ReentrantLock类</h1><p><strong>服务类：</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">        lock.lock();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">"-"</span> + i);</div><div class="line">        &#125;</div><div class="line">        lock.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <a id="more"></a>
 <p><strong>线程类</strong></p>
@@ -264,9 +263,18 @@
   
 <nav id="article-nav">
   
+    <a href="/2017/07/14/RocketMQ4.0.0环境搭建及HelloWorld/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          RocketMQ4.0.0环境搭建及HelloWorld
+        
+      </div>
+    </a>
   
-    <a href="/2017/07/14/API网关设计与实现/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">API网关设计与实现</div>
+  
+    <a href="/2017/07/14/RocketMQ报错No route info of this topic解决方案/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">RocketMQ报错No route info of this topic解决方案</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -427,6 +435,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">RocketMQ</a>
               </li>
              
@@ -443,15 +455,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">synchronized</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
               </li>
              
               <li class="article-tag-list-item">

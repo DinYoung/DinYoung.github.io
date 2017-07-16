@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="https://DinYoung.github.io">
   <title>synchronized方式实现生产者-消费者模式 | dinyoung blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="生产者：123456789101112131415161718192021222324public class Producer &amp;#123;    private String lock;    public Producer(String lock)&amp;#123;        super();        this.lock = lock;    &amp;#125;    public void">
+  <meta name="description" content="生产者与消费者代码先来看波代码">
 <meta name="keywords" content="synchronized">
 <meta property="og:type" content="article">
 <meta property="og:title" content="synchronized方式实现生产者-消费者模式">
 <meta property="og:url" content="https://DinYoung.github.io/2017/07/14/synchronized方式实现生产者-消费者模式/index.html">
 <meta property="og:site_name" content="dinyoung blog">
-<meta property="og:description" content="生产者：123456789101112131415161718192021222324public class Producer &amp;#123;    private String lock;    public Producer(String lock)&amp;#123;        super();        this.lock = lock;    &amp;#125;    public void">
-<meta property="og:updated_time" content="2017-07-16T02:44:24.000Z">
+<meta property="og:description" content="生产者与消费者代码先来看波代码">
+<meta property="og:updated_time" content="2017-07-16T03:10:08.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="synchronized方式实现生产者-消费者模式">
-<meta name="twitter:description" content="生产者：123456789101112131415161718192021222324public class Producer &amp;#123;    private String lock;    public Producer(String lock)&amp;#123;        super();        this.lock = lock;    &amp;#125;    public void">
+<meta name="twitter:description" content="生产者与消费者代码先来看波代码">
   
     <link rel="alternative" href="/atom.xml" title="dinyoung blog" type="application/atom+xml">
   
@@ -160,7 +160,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <a id="more"></a>
+        <h1 id="生产者与消费者代码"><a href="#生产者与消费者代码" class="headerlink" title="生产者与消费者代码"></a>生产者与消费者代码</h1><p>先来看波代码<br><a id="more"></a></p>
 <h2 id="生产者："><a href="#生产者：" class="headerlink" title="生产者："></a>生产者：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">public class Producer &#123;</div><div class="line">    private String lock;</div><div class="line"></div><div class="line">    public Producer(String lock)&#123;</div><div class="line">        super();</div><div class="line">        this.lock = lock;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setValue()&#123;</div><div class="line">        try&#123;</div><div class="line">            synchronized (lock)&#123;</div><div class="line">                if(!ValueObject.value.equals(&quot;&quot;))&#123;</div><div class="line">                    lock.wait();</div><div class="line">                &#125;</div><div class="line">                String value = System.currentTimeMillis() + &quot;_&quot; + System.nanoTime();</div><div class="line">                ValueObject.value = value;</div><div class="line">                System.out.println(&quot;set:&quot; + value);</div><div class="line">                lock.notify();</div><div class="line">            &#125;</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="消费者："><a href="#消费者：" class="headerlink" title="消费者："></a>消费者：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">public class Consumer &#123;</div><div class="line"></div><div class="line">    private String lock;</div><div class="line"></div><div class="line">    public Consumer(String lock)&#123;</div><div class="line">        super();</div><div class="line">        this.lock = lock;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void getValue()&#123;</div><div class="line">        try&#123;</div><div class="line">            synchronized (lock)&#123;</div><div class="line">                if(ValueObject.value.equals(&quot;&quot;))&#123;</div><div class="line">                    lock.wait();</div><div class="line">                &#125;</div><div class="line">                System.out.println(&quot;get:&quot; + ValueObject.value);</div><div class="line">                ValueObject.value = &quot;&quot;;</div><div class="line">                lock.notify();</div><div class="line">            &#125;</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="生产者线程："><a href="#生产者线程：" class="headerlink" title="生产者线程："></a>生产者线程：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class ThreadProducer extends Thread &#123;</div><div class="line">    private Producer producer;</div><div class="line"></div><div class="line">    public ThreadProducer(Producer producer)&#123;</div><div class="line">        this.producer = producer;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        while (true)&#123;</div><div class="line">            producer.setValue();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -251,17 +251,17 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/07/14/垃圾回收算法图谱与介绍(一)/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          垃圾回收算法详解（二）分代垃圾回收算法
+          垃圾回收算法图谱与介绍（一）
         
       </div>
     </a>
   
   
-    <a href="/2017/07/14/java多线程常用关键字介绍（一）/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2017/07/12/java多线程常用关键字介绍（一）/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">java多线程常用关键字介绍（一）</div>
       <i class="icon-circle-right"></i>
     </a>
@@ -423,6 +423,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">RocketMQ</a>
               </li>
              
@@ -439,15 +443,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">synchronized</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
               </li>
              
               <li class="article-tag-list-item">

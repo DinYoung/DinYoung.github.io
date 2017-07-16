@@ -140,19 +140,19 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-java多线程常用关键字与方法介绍（二）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-API网关设计与实现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/">java多线程常用关键字与方法介绍（二）</a>
+      <a class="article-title" href="/2017/07/14/API网关设计与实现/">API网关设计与实现</a>
     </h1>
   
 
         
-        <a href="/2017/07/14/java多线程常用关键字与方法介绍（二）/" class="archive-article-date">
+        <a href="/2017/07/14/API网关设计与实现/" class="archive-article-date">
   	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
 </a>
         
@@ -160,11 +160,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<h1 id="一、ReentrantLock类"><a href="#一、ReentrantLock类" class="headerlink" title="一、ReentrantLock类"></a>一、ReentrantLock类</h1><p><strong>服务类：</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">        lock.lock();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">"-"</span> + i);</div><div class="line">        &#125;</div><div class="line">        lock.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        <h1 id="API网关使用场景"><a href="#API网关使用场景" class="headerlink" title="API网关使用场景"></a>API网关使用场景</h1><blockquote>
+<p>在使用微服务架构场景下，客户端在调用后台微服务时，都需要进行登陆认证、权限认证、流量控制、负载均衡、健康检查等操作，这些操作是调用每一个微服务都必须。因此需要将该操作交给一个高性能的中间层进行处理，以降低系统间的耦合，并使微服务更加专注于业务逻辑处理，降低整体系统的响应时间。<br>
         
-          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/#more">more >></a>
+          <a class="article-more-a" href="/2017/07/14/API网关设计与实现/#more">more >></a>
         
       
 
@@ -178,11 +177,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">多线程</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网关</a>
         		</li>
       		
 		</ul>
@@ -192,7 +187,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/07/14/API网关设计与实现/">展开全文 >></a>
         </p>
       
 
@@ -222,19 +217,19 @@
 
 
   
-    <article id="post-API网关设计与实现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-垃圾回收算法详解（二）分代垃圾回收算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/API网关设计与实现/">API网关设计与实现</a>
+      <a class="article-title" href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/">垃圾回收算法详解（二）分代垃圾回收算法</a>
     </h1>
   
 
         
-        <a href="/2017/07/14/API网关设计与实现/" class="archive-article-date">
+        <a href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/" class="archive-article-date">
   	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
 </a>
         
@@ -242,11 +237,13 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<h1 id="API网关使用场景"><a href="#API网关使用场景" class="headerlink" title="API网关使用场景"></a>API网关使用场景</h1><blockquote>
-<p>在使用微服务架构场景下，客户端在调用后台微服务时，都需要进行登陆认证、权限认证、流量控制、负载均衡、健康检查等操作，这些操作是调用每一个微服务都必须。因此需要将该操作交给一个高性能的中间层进行处理，以降低系统间的耦合，并使微服务更加专注于业务逻辑处理，降低整体系统的响应时间。<br>
+        <h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><blockquote>
+<p>首先，“<strong>分代垃圾回收</strong>”不能单独用来执行 GC。它是用来和之前介绍的基本算法结合在一起使用，来提高那些基本算法的效率的。</p>
+<p>也就是说，分代垃圾回收不是跟 ”<strong>GC 标记 - 清除算法</strong>”和 “<strong>GC 复制算法</strong>”并列在一起供我们选择的算法，而是需要跟这些基本算法一并使用。</p>
+</blockquote>
+<p>好了，来看看什么是分代垃圾回收算法吧。<br>
         
-          <a class="article-more-a" href="/2017/07/14/API网关设计与实现/#more">more >></a>
+          <a class="article-more-a" href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/#more">more >></a>
         
       
 
@@ -260,7 +257,19 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网关</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">垃圾回收</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">gc</a>
         		</li>
       		
 		</ul>
@@ -270,7 +279,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/API网关设计与实现/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/">展开全文 >></a>
         </p>
       
 
@@ -347,6 +356,87 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/07/14/RocketMQ4.0.0环境搭建及HelloWorld/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-java多线程常用关键字与方法介绍（二）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/">java多线程常用关键字与方法介绍（二）</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/14/java多线程常用关键字与方法介绍（二）/" class="archive-article-date">
+  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一、ReentrantLock类"><a href="#一、ReentrantLock类" class="headerlink" title="一、ReentrantLock类"></a>一、ReentrantLock类</h1><p><strong>服务类：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">        lock.lock();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">"-"</span> + i);</div><div class="line">        &#125;</div><div class="line">        lock.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">多线程</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/">展开全文 >></a>
         </p>
       
 
@@ -541,19 +631,19 @@
 
 
   
-    <article id="post-垃圾回收算法详解（二）分代垃圾回收算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-垃圾回收算法图谱与介绍(一)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/">垃圾回收算法详解（二）分代垃圾回收算法</a>
+      <a class="article-title" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/">垃圾回收算法图谱与介绍（一）</a>
     </h1>
   
 
         
-        <a href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/" class="archive-article-date">
+        <a href="/2017/07/14/垃圾回收算法图谱与介绍(一)/" class="archive-article-date">
   	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
 </a>
         
@@ -561,14 +651,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><blockquote>
-<p>首先，“<strong>分代垃圾回收</strong>”不能单独用来执行 GC。它是用来和之前介绍的基本算法结合在一起使用，来提高那些基本算法的效率的。</p>
-<p>也就是说，分代垃圾回收不是跟 ”<strong>GC 标记 - 清除算法</strong>”和 “<strong>GC 复制算法</strong>”并列在一起供我们选择的算法，而是需要跟这些基本算法一并使用。</p>
-</blockquote>
-<p>好了，来看看什么是分代垃圾回收算法吧。<br>
+        <p>[toc]</p>
+<h1 id="一、算法图谱"><a href="#一、算法图谱" class="headerlink" title="一、算法图谱"></a>一、算法图谱</h1><p><img src="http://img.blog.csdn.net/20170404202650075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
         
-          <a class="article-more-a" href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/#more">more >></a>
+          <a class="article-more-a" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/#more">more >></a>
         
       
 
@@ -582,11 +668,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -604,7 +690,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/">展开全文 >></a>
         </p>
       
 
@@ -654,15 +740,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <a id="more"></a>
-<h2 id="生产者："><a href="#生产者：" class="headerlink" title="生产者："></a>生产者：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">public class Producer &#123;</div><div class="line">    private String lock;</div><div class="line"></div><div class="line">    public Producer(String lock)&#123;</div><div class="line">        super();</div><div class="line">        this.lock = lock;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setValue()&#123;</div><div class="line">        try&#123;</div><div class="line">            synchronized (lock)&#123;</div><div class="line">                if(!ValueObject.value.equals(&quot;&quot;))&#123;</div><div class="line">                    lock.wait();</div><div class="line">                &#125;</div><div class="line">                String value = System.currentTimeMillis() + &quot;_&quot; + System.nanoTime();</div><div class="line">                ValueObject.value = value;</div><div class="line">                System.out.println(&quot;set:&quot; + value);</div><div class="line">                lock.notify();</div><div class="line">            &#125;</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="消费者："><a href="#消费者：" class="headerlink" title="消费者："></a>消费者：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">public class Consumer &#123;</div><div class="line"></div><div class="line">    private String lock;</div><div class="line"></div><div class="line">    public Consumer(String lock)&#123;</div><div class="line">        super();</div><div class="line">        this.lock = lock;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void getValue()&#123;</div><div class="line">        try&#123;</div><div class="line">            synchronized (lock)&#123;</div><div class="line">                if(ValueObject.value.equals(&quot;&quot;))&#123;</div><div class="line">                    lock.wait();</div><div class="line">                &#125;</div><div class="line">                System.out.println(&quot;get:&quot; + ValueObject.value);</div><div class="line">                ValueObject.value = &quot;&quot;;</div><div class="line">                lock.notify();</div><div class="line">            &#125;</div><div class="line">        &#125;catch (InterruptedException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="生产者线程："><a href="#生产者线程：" class="headerlink" title="生产者线程："></a>生产者线程：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class ThreadProducer extends Thread &#123;</div><div class="line">    private Producer producer;</div><div class="line"></div><div class="line">    public ThreadProducer(Producer producer)&#123;</div><div class="line">        this.producer = producer;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        while (true)&#123;</div><div class="line">            producer.setValue();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="消费者线程："><a href="#消费者线程：" class="headerlink" title="消费者线程："></a>消费者线程：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public class ThreadConsumer extends Thread &#123;</div><div class="line"></div><div class="line">    private Consumer consumer;</div><div class="line"></div><div class="line">    public ThreadConsumer(Consumer consumer)&#123;</div><div class="line">        this.consumer = consumer;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        while (true)&#123;</div><div class="line">            consumer.getValue();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="公共值对象"><a href="#公共值对象" class="headerlink" title="公共值对象"></a>公共值对象</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public class ValueObject &#123;</div><div class="line">    public static String value = &quot;&quot;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="启动类："><a href="#启动类：" class="headerlink" title="启动类："></a>启动类：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Run &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        String lock = new String(&quot;&quot;);</div><div class="line">        Producer p = new Producer(lock);</div><div class="line">        Consumer c = new Consumer(lock);</div><div class="line">        ThreadProducer pThread = new ThreadProducer(p);</div><div class="line">        ThreadConsumer cThread = new ThreadConsumer(c);</div><div class="line"></div><div class="line">        pThread.start();</div><div class="line">        cThread.start();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">set:1487991128665_697508406469322</div><div class="line">get:1487991128665_697508406469322</div><div class="line">set:1487991128665_697508406488082</div><div class="line">get:1487991128665_697508406488082</div><div class="line">set:1487991128665_697508406506548</div><div class="line">get:1487991128665_697508406506548</div><div class="line">set:1487991128665_697508406525014</div><div class="line">get:1487991128665_697508406525014</div><div class="line">set:1487991128665_697508406544066</div><div class="line">get:1487991128665_697508406544066</div></pre></td></tr></table></figure>
-
+        <h1 id="生产者与消费者代码"><a href="#生产者与消费者代码" class="headerlink" title="生产者与消费者代码"></a>生产者与消费者代码</h1><p>先来看波代码<br>
+        
+          <a class="article-more-a" href="/2017/07/14/synchronized方式实现生产者-消费者模式/#more">more >></a>
+        
       
 
       
@@ -722,23 +803,22 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/java多线程常用关键字介绍（一）/">java多线程常用关键字介绍（一）</a>
+      <a class="article-title" href="/2017/07/12/java多线程常用关键字介绍（一）/">java多线程常用关键字介绍（一）</a>
     </h1>
   
 
         
-        <a href="/2017/07/14/java多线程常用关键字介绍（一）/" class="archive-article-date">
-  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
+        <a href="/2017/07/12/java多线程常用关键字介绍（一）/" class="archive-article-date">
+  	<time datetime="2017-07-12T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-12</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<h1 id="一、synchronized"><a href="#一、synchronized" class="headerlink" title="一、synchronized"></a>一、synchronized</h1><h2 id="1-synchronized-amp-非静态方法"><a href="#1-synchronized-amp-非静态方法" class="headerlink" title="1.synchronized &amp; 非静态方法"></a>1.synchronized &amp; 非静态方法</h2><p><strong>服务类</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span></span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> count;</div><div class="line">    <span class="function"><span class="keyword">synchronized</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">        count ++;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+        <h1 id="一、synchronized"><a href="#一、synchronized" class="headerlink" title="一、synchronized"></a>一、synchronized</h1><h2 id="1-synchronized-amp-非静态方法"><a href="#1-synchronized-amp-非静态方法" class="headerlink" title="1.synchronized &amp; 非静态方法"></a>1.synchronized &amp; 非静态方法</h2><p><strong>服务类</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span></span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> count;</div><div class="line">    <span class="function"><span class="keyword">synchronized</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">        count ++;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
         
-          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字介绍（一）/#more">more >></a>
+          <a class="article-more-a" href="/2017/07/12/java多线程常用关键字介绍（一）/#more">more >></a>
         
       
 
@@ -766,96 +846,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字介绍（一）/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-垃圾回收算法图谱与介绍(一)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/">垃圾回收算法图谱与介绍（一）</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/14/垃圾回收算法图谱与介绍(一)/" class="archive-article-date">
-  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[toc]</p>
-<h1 id="一、算法图谱"><a href="#一、算法图谱" class="headerlink" title="一、算法图谱"></a>一、算法图谱</h1><p><img src="http://img.blog.csdn.net/20170404202650075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
-        
-          <a class="article-more-a" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">垃圾回收</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">gc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/07/12/java多线程常用关键字介绍（一）/">展开全文 >></a>
         </p>
       
 
@@ -1099,6 +1090,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">RocketMQ</a>
               </li>
              
@@ -1115,15 +1110,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">synchronized</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
               </li>
              
               <li class="article-tag-list-item">
