@@ -140,19 +140,19 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-java多线程常用关键字介绍（一）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-java多线程常用关键字与方法介绍（二）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/java多线程常用关键字介绍（一）/">java多线程常用关键字介绍（一）</a>
+      <a class="article-title" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/">java多线程常用关键字与方法介绍（二）</a>
     </h1>
   
 
         
-        <a href="/2017/07/14/java多线程常用关键字介绍（一）/" class="archive-article-date">
+        <a href="/2017/07/14/java多线程常用关键字与方法介绍（二）/" class="archive-article-date">
   	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
 </a>
         
@@ -161,9 +161,10 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>[TOC]</p>
-<h1 id="一、synchronized"><a href="#一、synchronized" class="headerlink" title="一、synchronized"></a>一、synchronized</h1><h2 id="1-synchronized-amp-非静态方法"><a href="#1-synchronized-amp-非静态方法" class="headerlink" title="1.synchronized &amp; 非静态方法"></a>1.synchronized &amp; 非静态方法</h2><p><strong>服务类</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span></span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> count;</div><div class="line">    <span class="function"><span class="keyword">synchronized</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">        count ++;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="一、ReentrantLock类"><a href="#一、ReentrantLock类" class="headerlink" title="一、ReentrantLock类"></a>一、ReentrantLock类</h1><p><strong>服务类：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">        lock.lock();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">"-"</span> + i);</div><div class="line">        &#125;</div><div class="line">        lock.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
         
-          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字介绍（一）/#more">more >></a>
+          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/#more">more >></a>
         
       
 
@@ -191,7 +192,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字介绍（一）/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/">展开全文 >></a>
         </p>
       
 
@@ -540,19 +541,19 @@
 
 
   
-    <article id="post-java多线程常用关键字与方法介绍（二）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-垃圾回收算法详解（二）分代垃圾回收算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/">java多线程常用关键字与方法介绍（二）</a>
+      <a class="article-title" href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/">垃圾回收算法详解（二）分代垃圾回收算法</a>
     </h1>
   
 
         
-        <a href="/2017/07/14/java多线程常用关键字与方法介绍（二）/" class="archive-article-date">
+        <a href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/" class="archive-article-date">
   	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
 </a>
         
@@ -561,91 +562,13 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>[TOC]</p>
-<h1 id="一、ReentrantLock类"><a href="#一、ReentrantLock类" class="headerlink" title="一、ReentrantLock类"></a>一、ReentrantLock类</h1><p><strong>服务类：</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">        lock.lock();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">"-"</span> + i);</div><div class="line">        &#125;</div><div class="line">        lock.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><blockquote>
+<p>首先，“<strong>分代垃圾回收</strong>”不能单独用来执行 GC。它是用来和之前介绍的基本算法结合在一起使用，来提高那些基本算法的效率的。</p>
+<p>也就是说，分代垃圾回收不是跟 ”<strong>GC 标记 - 清除算法</strong>”和 “<strong>GC 复制算法</strong>”并列在一起供我们选择的算法，而是需要跟这些基本算法一并使用。</p>
+</blockquote>
+<p>好了，来看看什么是分代垃圾回收算法吧。<br>
         
-          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">多线程</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-垃圾回收算法图谱与介绍(一)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/">垃圾回收算法图谱与介绍（一）</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/14/垃圾回收算法图谱与介绍(一)/" class="archive-article-date">
-  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[toc]</p>
-<h1 id="一、算法图谱"><a href="#一、算法图谱" class="headerlink" title="一、算法图谱"></a>一、算法图谱</h1><p><img src="http://img.blog.csdn.net/20170404202650075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
-        
-          <a class="article-more-a" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/#more">more >></a>
+          <a class="article-more-a" href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/#more">more >></a>
         
       
 
@@ -681,7 +604,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/">展开全文 >></a>
         </p>
       
 
@@ -792,19 +715,19 @@
 
 
   
-    <article id="post-垃圾回收算法详解（二）分代垃圾回收算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-java多线程常用关键字介绍（一）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/">垃圾回收算法详解（二）分代垃圾回收算法</a>
+      <a class="article-title" href="/2017/07/14/java多线程常用关键字介绍（一）/">java多线程常用关键字介绍（一）</a>
     </h1>
   
 
         
-        <a href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/" class="archive-article-date">
+        <a href="/2017/07/14/java多线程常用关键字介绍（一）/" class="archive-article-date">
   	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
 </a>
         
@@ -813,13 +736,90 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>[TOC]</p>
-<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><blockquote>
-<p>首先，“<strong>分代垃圾回收</strong>”不能单独用来执行 GC。它是用来和之前介绍的基本算法结合在一起使用，来提高那些基本算法的效率的。</p>
-<p>也就是说，分代垃圾回收不是跟 ”<strong>GC 标记 - 清除算法</strong>”和 “<strong>GC 复制算法</strong>”并列在一起供我们选择的算法，而是需要跟这些基本算法一并使用。</p>
-</blockquote>
-<p>好了，来看看什么是分代垃圾回收算法吧。<br>
+<h1 id="一、synchronized"><a href="#一、synchronized" class="headerlink" title="一、synchronized"></a>一、synchronized</h1><h2 id="1-synchronized-amp-非静态方法"><a href="#1-synchronized-amp-非静态方法" class="headerlink" title="1.synchronized &amp; 非静态方法"></a>1.synchronized &amp; 非静态方法</h2><p><strong>服务类</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span></span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> count;</div><div class="line">    <span class="function"><span class="keyword">synchronized</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">        count ++;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
         
-          <a class="article-more-a" href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/#more">more >></a>
+          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字介绍（一）/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">多线程</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字介绍（一）/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-垃圾回收算法图谱与介绍(一)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/">垃圾回收算法图谱与介绍（一）</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/14/垃圾回收算法图谱与介绍(一)/" class="archive-article-date">
+  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<h1 id="一、算法图谱"><a href="#一、算法图谱" class="headerlink" title="一、算法图谱"></a>一、算法图谱</h1><p><img src="http://img.blog.csdn.net/20170404202650075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+        
+          <a class="article-more-a" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/#more">more >></a>
         
       
 
@@ -855,7 +855,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/垃圾回收算法详解（二）分代垃圾回收算法/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/">展开全文 >></a>
         </p>
       
 
@@ -1115,15 +1115,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">synchronized</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
               </li>
              
               <li class="article-tag-list-item">
