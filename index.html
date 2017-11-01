@@ -220,19 +220,19 @@
 
 
   
-    <article id="post-垃圾回收算法图谱与介绍(一)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-RocketMQ报错No route info of this topic解决方案" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/">垃圾回收算法图谱与介绍（一）</a>
+      <a class="article-title" href="/2017/07/14/RocketMQ报错No route info of this topic解决方案/">RocketMQ报错No route info of this topic解决方案</a>
     </h1>
   
 
         
-        <a href="/2017/07/14/垃圾回收算法图谱与介绍(一)/" class="archive-article-date">
+        <a href="/2017/07/14/RocketMQ报错No route info of this topic解决方案/" class="archive-article-date">
   	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
 </a>
         
@@ -240,10 +240,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[toc]</p>
-<h1 id="一、算法图谱"><a href="#一、算法图谱" class="headerlink" title="一、算法图谱"></a>一、算法图谱</h1><p><img src="http://img.blog.csdn.net/20170404202650075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+        <p><strong>按照官方文档启动broker</strong><br><strong>↓↓↓↓↓↓这是错误的！！！↓↓↓↓↓↓</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nohup sh bin/mqbroker -n localhost:9876 &amp;</div></pre></td></tr></table></figure>
+<p><strong>↑↑↑↑↑↑这是错误的！！！↑↑↑↑↑↑</strong><br>
         
-          <a class="article-more-a" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/#more">more >></a>
+          <a class="article-more-a" href="/2017/07/14/RocketMQ报错No route info of this topic解决方案/#more">more >></a>
         
       
 
@@ -257,19 +258,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">垃圾回收</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">gc</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">RocketMQ</a>
         		</li>
       		
 		</ul>
@@ -279,84 +268,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-API网关设计与实现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/API网关设计与实现/">API网关设计与实现</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/14/API网关设计与实现/" class="archive-article-date">
-  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="API网关使用场景"><a href="#API网关使用场景" class="headerlink" title="API网关使用场景"></a>API网关使用场景</h1><blockquote>
-<p>在使用微服务架构场景下，客户端在调用后台微服务时，都需要进行登陆认证、权限认证、流量控制、负载均衡、健康检查等操作，这些操作是调用每一个微服务都必须。因此需要将该操作交给一个高性能的中间层进行处理，以降低系统间的耦合，并使微服务更加专注于业务逻辑处理，降低整体系统的响应时间。<br>
-        
-          <a class="article-more-a" href="/2017/07/14/API网关设计与实现/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网关</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/API网关设计与实现/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/07/14/RocketMQ报错No route info of this topic解决方案/">展开全文 >></a>
         </p>
       
 
@@ -549,6 +461,164 @@
 
 
   
+    <article id="post-java多线程常用关键字与方法介绍（二）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/">java多线程常用关键字与方法介绍（二）</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/14/java多线程常用关键字与方法介绍（二）/" class="archive-article-date">
+  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一、ReentrantLock类"><a href="#一、ReentrantLock类" class="headerlink" title="一、ReentrantLock类"></a>一、ReentrantLock类</h1><p><strong>服务类：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">        lock.lock();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">"-"</span> + i);</div><div class="line">        &#125;</div><div class="line">        lock.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">多线程</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-API网关设计与实现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/14/API网关设计与实现/">API网关设计与实现</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/14/API网关设计与实现/" class="archive-article-date">
+  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="API网关使用场景"><a href="#API网关使用场景" class="headerlink" title="API网关使用场景"></a>API网关使用场景</h1><blockquote>
+<p>在使用微服务架构场景下，客户端在调用后台微服务时，都需要进行登陆认证、权限认证、流量控制、负载均衡、健康检查等操作，这些操作是调用每一个微服务都必须。因此需要将该操作交给一个高性能的中间层进行处理，以降低系统间的耦合，并使微服务更加专注于业务逻辑处理，降低整体系统的响应时间。<br>
+        
+          <a class="article-more-a" href="/2017/07/14/API网关设计与实现/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网关</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/14/API网关设计与实现/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-synchronized方式实现生产者-消费者模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -625,19 +695,19 @@
 
 
   
-    <article id="post-RocketMQ报错No route info of this topic解决方案" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-垃圾回收算法图谱与介绍(一)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/RocketMQ报错No route info of this topic解决方案/">RocketMQ报错No route info of this topic解决方案</a>
+      <a class="article-title" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/">垃圾回收算法图谱与介绍（一）</a>
     </h1>
   
 
         
-        <a href="/2017/07/14/RocketMQ报错No route info of this topic解决方案/" class="archive-article-date">
+        <a href="/2017/07/14/垃圾回收算法图谱与介绍(一)/" class="archive-article-date">
   	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
 </a>
         
@@ -645,11 +715,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>按照官方文档启动broker</strong><br><strong>↓↓↓↓↓↓这是错误的！！！↓↓↓↓↓↓</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nohup sh bin/mqbroker -n localhost:9876 &amp;</div></pre></td></tr></table></figure>
-<p><strong>↑↑↑↑↑↑这是错误的！！！↑↑↑↑↑↑</strong><br>
+        <p>[toc]</p>
+<h1 id="一、算法图谱"><a href="#一、算法图谱" class="headerlink" title="一、算法图谱"></a>一、算法图谱</h1><p><img src="http://img.blog.csdn.net/20170404202650075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
         
-          <a class="article-more-a" href="/2017/07/14/RocketMQ报错No route info of this topic解决方案/#more">more >></a>
+          <a class="article-more-a" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/#more">more >></a>
         
       
 
@@ -663,89 +732,20 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">RocketMQ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/RocketMQ报错No route info of this topic解决方案/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-java多线程常用关键字与方法介绍（二）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/">java多线程常用关键字与方法介绍（二）</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/14/java多线程常用关键字与方法介绍（二）/" class="archive-article-date">
-  	<time datetime="2017-07-14T06:51:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-07-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="一、ReentrantLock类"><a href="#一、ReentrantLock类" class="headerlink" title="一、ReentrantLock类"></a>一、ReentrantLock类</h1><p><strong>服务类：</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">        lock.lock();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">"-"</span> + i);</div><div class="line">        &#125;</div><div class="line">        lock.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-        
-          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">多线程</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
         		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">垃圾回收</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">gc</a>
+        		</li>
       		
 		</ul>
 	</div>
@@ -754,7 +754,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/java多线程常用关键字与方法介绍（二）/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/07/14/垃圾回收算法图谱与介绍(一)/">展开全文 >></a>
         </p>
       
 
@@ -1082,11 +1082,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">RocketMQ</a>
+                <a href="javascript:void(0)" class="js-tag color3">网关</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">网关</a>
+                <a href="javascript:void(0)" class="js-tag color4">RocketMQ</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1106,6 +1106,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">synchronized</a>
               </li>
              
@@ -1114,7 +1118,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">java</a>
+                <a href="javascript:void(0)" class="js-tag color5">垃圾回收</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">gc</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1123,14 +1131,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">事务</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">垃圾回收</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">gc</a>
               </li>
             
             <div class="clearfix"></div>
