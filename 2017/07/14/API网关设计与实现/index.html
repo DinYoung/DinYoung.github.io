@@ -17,7 +17,7 @@
 <meta property="og:description" content="API网关使用场景 在使用微服务架构场景下，客户端在调用后台微服务时，都需要进行登陆认证、权限认证、流量控制、负载均衡、健康检查等操作，这些操作是调用每一个微服务都必须。因此需要将该操作交给一个高性能的中间层进行处理，以降低系统间的耦合，并使微服务更加专注于业务逻辑处理，降低整体系统的响应时间。">
 <meta property="og:image" content="http://img.blog.csdn.net/20170318130052179?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20170318142604061?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-07-16T03:08:54.000Z">
+<meta property="og:updated_time" content="2018-01-16T13:12:14.386Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="API网关设计与实现">
 <meta name="twitter:description" content="API网关使用场景 在使用微服务架构场景下，客户端在调用后台微服务时，都需要进行登陆认证、权限认证、流量控制、负载均衡、健康检查等操作，这些操作是调用每一个微服务都必须。因此需要将该操作交给一个高性能的中间层进行处理，以降低系统间的耦合，并使微服务更加专注于业务逻辑处理，降低整体系统的响应时间。">
@@ -167,8 +167,7 @@
 <p>在使用微服务架构场景下，客户端在调用后台微服务时，都需要进行登陆认证、权限认证、流量控制、负载均衡、健康检查等操作，这些操作是调用每一个微服务都必须。因此需要将该操作交给一个高性能的中间层进行处理，以降低系统间的耦合，并使微服务更加专注于业务逻辑处理，降低整体系统的响应时间。<br><a id="more"></a><br><img src="http://img.blog.csdn.net/20170318130052179?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
 </blockquote>
 <p>如图，来自各种终端的请求经过一层负载均衡后到达网关，网关统一做登陆认证、权限认证、流量控制、负载均衡、健康检查等操作后，再将请求转发到后台微服务。</p>
-<p>#API网关技术选型与应用架构</p>
-<blockquote>
+<h1 id="API网关技术选型与应用架构"><a href="#API网关技术选型与应用架构" class="headerlink" title="API网关技术选型与应用架构"></a>API网关技术选型与应用架构</h1><blockquote>
 <p>API网关作为后台微服务请求的入口，必然要求其具有高性能的特点，为了使其可以按照自己的使用场景定制开发，对其易扩展性也要求很高，并且最好是有成熟的产品与规范的文档以及活跃的社区支持。OpenResty自然成为了首选！OpenResty是一款基于Ngnix的利用lua语言作为扩展的API网关技术。</p>
 </blockquote>
 <p><img src="http://img.blog.csdn.net/20170318142604061?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuZ2Rpbmdf/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
@@ -261,11 +260,11 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/11/01/详解数据库事务隔离级别/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/07/14/java多线程常用关键字与方法介绍（二）/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          详解数据库事务隔离级别
+          java多线程常用关键字与方法介绍（二）
         
       </div>
     </a>
@@ -313,7 +312,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2017 dinyoung
+    		&copy; 2018 dinyoung
     	</div>
       	<div class="footer-right">
        	</div>
@@ -417,6 +416,14 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">数据库</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">并发</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">网关</a>
               </li>
              
@@ -433,14 +440,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">RocketMQ</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Twitter Snowflake</a>
               </li>
              
@@ -450,6 +449,14 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">RocketMQ</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -466,10 +473,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">gc</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">数据库</a>
               </li>
              
               <li class="article-tag-list-item">
