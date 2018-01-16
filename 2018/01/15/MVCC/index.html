@@ -15,7 +15,7 @@
 <meta property="og:url" content="https://DinYoung.github.io/2018/01/15/MVCC/index.html">
 <meta property="og:site_name" content="dinyoung blog">
 <meta property="og:description" content="原理Multiversion concurrency control (MCC or MVCC), is a concurrency control method commonly used by database management systems to provide concurrent access to the database and in programming languages">
-<meta property="og:updated_time" content="2018-01-16T13:12:06.965Z">
+<meta property="og:updated_time" content="2018-01-16T13:17:17.634Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MVCC原理介绍（Multiversion concurrency control）">
 <meta name="twitter:description" content="原理Multiversion concurrency control (MCC or MVCC), is a concurrency control method commonly used by database management systems to provide concurrent access to the database and in programming languages">
@@ -214,11 +214,13 @@
 <tr>
 <td>0</td>
 <td>“Foo” by T0</td>
-<td>“Bar” by T0    </td>
+<td>“Bar” by T0</td>
+<td></td>
 </tr>
 <tr>
 <td>1</td>
 <td>“Hello” by T1</td>
+<td></td>
 <td></td>
 </tr>
 <tr>
@@ -495,6 +497,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Twitter Snowflake</a>
               </li>
              
@@ -508,10 +514,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">RocketMQ</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">
